@@ -1,5 +1,5 @@
 ========================
-BUILD OUTPUT DESCRIPTION 3
+BUILD OUTPUT DESCRIPTION 4
 ========================
 
 When you build an Java application project that has a main class, the IDE
