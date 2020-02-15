@@ -26,7 +26,7 @@ public class VertexPair {
     }
 
 
-    public int getShortestDistance() {
+    public int getShortestDistance() {									//di na to gumagana ng maayos
         //simple BFS
         Vector<Vertex> visitedNodes = new Vector<Vertex>();
         visitedNodes.add(vertex1);      //root node = vertex1

@@ -58,6 +58,7 @@ public class Canvas {
         JMenu menuOptions1 = new JMenu("File");
         JMenu menuOptions2 = new JMenu("Extras");
         JMenu menuOptions3 = new JMenu("Window");
+        JMenu menuOptions4 = new JMenu("Properties");
 
         JMenuItem item = new JMenuItem("Add Vertex");
         item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_DOWN_MASK));
@@ -97,11 +98,16 @@ public class Canvas {
         item = new JMenuItem("Properties");
         item.addActionListener(new MenuListener());
         menuOptions3.add(item);
+        
+        item = new JMenuItem("Degree");
+        item.addActionListener(new MenuListener());
+        menuOptions4.add(item);
 
         menuBar.add(menuOptions1);
         menuBar.add(menuOptions);
         menuBar.add(menuOptions2);
         menuBar.add(menuOptions3);
+        menuBar.add(menuOptions4);
 
         frame.setJMenuBar(menuBar);
 
@@ -194,6 +200,7 @@ public class Canvas {
                             if (v.hasIntersection(e.getX(), e.getY())) {
                                 v.wasClicked = true;
                                 clickedVertexIndex = vertexList.indexOf(v);
+                                System.out.println(vertexList.get(clickedVertexIndex).getDegree());							//print the degree to console
                             } else {
                                 v.wasClicked = false;
                             }
@@ -219,6 +226,7 @@ public class Canvas {
                                 v.wasClicked = false;
                                 parentV.wasClicked = false;
                                 edgeList.add(edge);
+                                edge.askWeight();
                             } else {
                                 v.wasClicked = false;
                             }
@@ -340,6 +348,9 @@ public class Canvas {
                 //gP.drawNWideDiameter();
                 }
                 erase();
+            } else if (command.equals("Degree")) {
+            	selectedWindow = 3;
+            	erase();
             }
 
             refresh();
@@ -458,6 +469,15 @@ public class Canvas {
                     g.setColor(Color.black);
 
                     break;
+                }
+                case 3: {				//print the vertex as degree
+                	vertexList = gP.getDegree(vertexList, edgeList);
+                	for (Edge e : edgeList) {
+                        e.draw(g);
+                    }
+                    for (Vertex v : vertexList) {
+                        v.drawDegree(g);
+                    }
                 }
             }
 

@@ -31,13 +31,13 @@ public class GraphProperties {
         }
 
         for (int i = 0; i < eList.size(); i++) {
-            adjacencyMatrix[vList.indexOf(eList.get(i).vertex1)][vList.indexOf(eList.get(i).vertex2)] = 1;
-            adjacencyMatrix[vList.indexOf(eList.get(i).vertex2)][vList.indexOf(eList.get(i).vertex1)] = 1;
+            adjacencyMatrix[vList.indexOf(eList.get(i).vertex1)][vList.indexOf(eList.get(i).vertex2)] = eList.get(i).weight;
+            adjacencyMatrix[vList.indexOf(eList.get(i).vertex2)][vList.indexOf(eList.get(i).vertex1)] = eList.get(i).weight;
         }
         return adjacencyMatrix;
     }
 
-    public int[][] generateDistanceMatrix(Vector<Vertex> vList) {
+    public int[][] generateDistanceMatrix(Vector<Vertex> vList) {				//di na gumagana ng maayos
         distanceMatrix = new int[vList.size()][vList.size()];
 
         for (int a = 0; a < vList.size(); a++)//initialize
@@ -216,6 +216,21 @@ public class GraphProperties {
             }
         }
     }
+    
+    //--------------------------- NEW FUNCTIONS ---------------------------//
+    public Vector<Vertex> getDegree (Vector<Vertex> vList, Vector<Edge> eList){
+    	int[][] matrix = generateAdjacencyMatrix(vList, eList);
+    	int sum = 0;
+    	for (Vertex v : vList) {
+    		sum = 0;
+    		for (int i = 0; i<vList.size(); i++) {
+    			sum += matrix[Integer.parseInt(v.name)][i];
+    		}
+    		v.setDegree(sum);
+    	}
+    	return vList;
+    }
+    //---------------------------------------------------------------------//
 
     private class ascendingDegreeComparator implements Comparator {
 
@@ -258,4 +273,5 @@ public class GraphProperties {
             }
         }
     }
+    
 }

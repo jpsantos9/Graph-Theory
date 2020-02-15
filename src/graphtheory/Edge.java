@@ -4,19 +4,25 @@
  */
 package graphtheory;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*; 
 
 /**
  *
  * @author mk
  */
-public class Edge {
+public class Edge implements ActionListener{
 
     public Vertex vertex1;
     public Vertex vertex2;
     public boolean wasFocused;
     public boolean wasClicked;
+    public int weight = 1;
+    
+    private JTextField tf1;
+    private JButton b1;
+    private JFrame f;
 
     public Edge(Vertex v1, Vertex v2) {
         vertex1 = v1;
@@ -32,8 +38,35 @@ public class Edge {
             g.setColor(Color.black);
         }
         g.drawLine(vertex1.location.x, vertex1.location.y, vertex2.location.x, vertex2.location.y);
-
+        int x = (vertex1.location.x+vertex2.location.x)/2;
+    	int y = (vertex1.location.y+vertex2.location.y)/2;
+        g.drawString(Integer.toString(weight), x, y);
     }
+    
+    public void askWeight() {
+    	f= new JFrame("Weight Value"); 
+    	tf1 = new JTextField();  
+        tf1.setBounds(75,5,150,20);
+        b1=new JButton("enter");  
+        b1.setBounds(100,30,100,30); 
+        b1.addActionListener(this);  
+        f.add(tf1);
+        f.add(b1);
+        f.setSize(300,100);
+        f.setLayout(null);
+        f.setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent e) {  
+        String s1=tf1.getText();   
+        int a=Integer.parseInt(s1);    
+        if(e.getSource()==b1){  
+            weight = a;
+        } else {
+        	weight = 1;
+        }
+        f.dispose();
+    }  
 
     public boolean hasIntersection(int x, int y) {
         int x1, x2, y1, y2;

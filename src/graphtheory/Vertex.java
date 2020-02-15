@@ -22,6 +22,7 @@ public class Vertex implements Comparable {
     private int size1 = 30;
     private int size2 = 40;
     public Vector<Vertex> connectedVertices;
+    public int degree;
 
     public Vertex(String name, int x, int y) {
         this.name = name;
@@ -31,6 +32,10 @@ public class Vertex implements Comparable {
 
     public void addVertex(Vertex v) {
         connectedVertices.add(v);
+    }
+    
+    public void setDegree(int degree) {
+    	this.degree = degree;
     }
 
     public boolean hasIntersection(int x, int y) {
@@ -78,5 +83,21 @@ public class Vertex implements Comparable {
         g.fillOval(location.x - size1 / 2, location.y - size1 / 2, size1, size1);
         g.setColor(Color.BLACK);
         g.drawString(name, location.x, location.y);
+    }
+    
+    public void drawDegree(Graphics g) {
+        if (wasClicked) {
+            g.setColor(Color.red);
+        } else if (wasFocused) {
+            g.setColor(Color.blue);
+        } else {
+            g.setColor(Color.black);
+        }
+
+        g.fillOval(location.x - size2 / 2, location.y - size2 / 2, size2+degree, size2+degree);
+        g.setColor(Color.CYAN);
+        g.fillOval(location.x - size1 / 2, location.y - size1 / 2, size1+degree, size1+degree);
+        g.setColor(Color.BLACK);
+        g.drawString(Integer.toString(degree), location.x, location.y);
     }
 }
