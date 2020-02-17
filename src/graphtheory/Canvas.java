@@ -58,8 +58,7 @@ public class Canvas {
         JMenu menuOptions1 = new JMenu("File");
         JMenu menuOptions2 = new JMenu("Extras");
         JMenu menuOptions3 = new JMenu("Window");
-        JMenu menuOptions4 = new JMenu("Properties");
-        JMenu menuOptions5 = new JMenu("Centrality");
+        JMenu menuOptions4 = new JMenu("Centrality");
 
         JMenuItem item = new JMenuItem("Add Vertex");
         item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_DOWN_MASK));
@@ -106,14 +105,17 @@ public class Canvas {
         
         item = new JMenuItem("Closeness");
         item.addActionListener(new MenuListener());
-        menuOptions5.add(item);
+        menuOptions4.add(item);
+        item = new JMenuItem("Betweenness");
+        item.addActionListener(new MenuListener());
+        menuOptions4.add(item);
+        
 
         menuBar.add(menuOptions1);
         menuBar.add(menuOptions);
         menuBar.add(menuOptions2);
         menuBar.add(menuOptions3);
         menuBar.add(menuOptions4);
-        menuBar.add(menuOptions5);
 
         frame.setJMenuBar(menuBar);
 
@@ -393,6 +395,9 @@ public class Canvas {
             } else if (command.equals("Closeness")) {
             	selectedWindow = 4;
             	erase();
+            } else if (command.equals("Betweenness")) {
+            	selectedWindow = 5;
+            	erase();
             }
 
             refresh();
@@ -520,6 +525,8 @@ public class Canvas {
                     for (Vertex v : vertexList) {
                         v.drawDegree(g);
                     }
+                    
+                    break;
                 }
                 case 4: {				//print the vertex as closeness degree
                 	vertexList = gP.getCloseness(vertexList, edgeList);
@@ -529,6 +536,21 @@ public class Canvas {
                     for (Vertex v : vertexList) {
                         v.drawCloseness(g);
                     }
+                    
+                    break;
+                }
+                case 5: {
+                	for (Vertex v : vertexList) {
+                    	v.setBetweenness(gP.getBetweenness(gP.generateAdjacencyMatrix(vertexList, edgeList), Integer.parseInt(v.name)));
+                    }
+                	for (Edge e : edgeList) {
+                        e.draw(g);
+                    }
+                    for (Vertex v : vertexList) {
+                        v.drawBetweenness(g);
+                    }
+                    
+                    break;
                 }
             }
 

@@ -249,6 +249,63 @@ public class GraphProperties {
     	}
     	return vList;
     }
+    
+    public int getBetweenness(int[][] adjacencyMatrix, int except) {
+    	
+    	int[] path;
+    	Vector<Integer> passed = new Vector<Integer>();
+    	passed.add(except);
+    	int value = 0;
+    	for (int i = 0; i<adjacencyMatrix[0].length; i++) {
+    		if (i!=except) {
+    			path = dijkstra(adjacencyMatrix, i);
+    			for (int j=i; j<path.length; j++) {
+    				if (passed.contains(path[j])) {
+    					value++;
+    					passed.add(j);
+    				}
+    			}
+    			passed = new Vector<Integer>();
+    	    	passed.add(except);
+    		}
+    	}
+    	return value;
+    }
+    
+    public int[] dijkstra(int[][] adjacencyMatrix, int startVertex) { 
+    	int nVertices = adjacencyMatrix[0].length;
+    	int[] shortestDistances = new int[nVertices];
+    	boolean[] added = new boolean[nVertices];
+    	
+    	for (int vertexIndex = 0; vertexIndex < nVertices; vertexIndex++) { 
+    		shortestDistances[vertexIndex] = Integer.MAX_VALUE; 
+    		added[vertexIndex] = false; 
+    	} 
+    	
+    	shortestDistances[startVertex] = 0; 
+    	int[] parents = new int[nVertices];
+    	parents[startVertex] = -1;
+    	
+    	for (int i = 1; i < nVertices; i++) {
+    		int nearestVertex = -1; 
+            int shortestDistance = Integer.MAX_VALUE;
+            for (int vertexIndex = 0; vertexIndex < nVertices; vertexIndex++) {
+            	if (!added[vertexIndex] && shortestDistances[vertexIndex] < shortestDistance) {
+            		nearestVertex = vertexIndex; 
+                    shortestDistance = shortestDistances[vertexIndex];
+            	}
+            }
+            added[nearestVertex] = true; 
+            for (int vertexIndex = 0; vertexIndex < nVertices; vertexIndex++) {
+            	int edgeDistance = adjacencyMatrix[nearestVertex][vertexIndex];
+            	if (edgeDistance > 0 && ((shortestDistance + edgeDistance) <  shortestDistances[vertexIndex])) {
+            		parents[vertexIndex] = nearestVertex; 
+                    shortestDistances[vertexIndex] = shortestDistance + edgeDistance; 
+            	}
+            }  
+    	}
+    	return parents;
+    }
     //---------------------------------------------------------------------//
 
     private class ascendingDegreeComparator implements Comparator {
