@@ -19,10 +19,11 @@ public class Vertex implements Comparable {
     public Point location;
     public boolean wasFocused;
     public boolean wasClicked;
-    private int size1 = 30;
-    private int size2 = 40;
+    private int size1 = 50;
+    private int size2 = 60;
     public Vector<Vertex> connectedVertices;
     public int degree;
+    public float closeness;
 
     public Vertex(String name, int x, int y) {
         this.name = name;
@@ -36,6 +37,10 @@ public class Vertex implements Comparable {
     
     public void setDegree(int degree) {
     	this.degree = degree;
+    }
+    
+    public void setCloseness(float closeness) {
+    	this.closeness = closeness;
     }
 
     public boolean hasIntersection(int x, int y) {
@@ -56,6 +61,10 @@ public class Vertex implements Comparable {
     }
 
     public int getDegree() {
+        return connectedVertices.size();
+    }
+    
+    public int getCloseness() {
         return connectedVertices.size();
     }
 
@@ -99,5 +108,21 @@ public class Vertex implements Comparable {
         g.fillOval(location.x - size1 / 2, location.y - size1 / 2, size1+degree, size1+degree);
         g.setColor(Color.BLACK);
         g.drawString(Integer.toString(degree), location.x, location.y);
+    }
+    
+    public void drawCloseness(Graphics g) {
+        if (wasClicked) {
+            g.setColor(Color.red);
+        } else if (wasFocused) {
+            g.setColor(Color.blue);
+        } else {
+            g.setColor(Color.black);
+        }
+
+        g.fillOval(location.x - size2 / 4, location.y - size2 / 2, size2+degree, size2+degree);
+        g.setColor(Color.PINK);
+        g.fillOval(location.x - size1 / 4, location.y - size1 / 2, size1+degree, size1+degree);
+        g.setColor(Color.BLACK);
+        g.drawString(Float.toString(closeness), location.x, location.y);
     }
 }

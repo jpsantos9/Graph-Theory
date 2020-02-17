@@ -52,7 +52,7 @@ public class Edge implements ActionListener{
         b1.addActionListener(this);  
         f.add(tf1);
         f.add(b1);
-        f.setSize(300,100);
+        f.setSize(300,150);
         f.setLayout(null);
         f.setVisible(true);
     }

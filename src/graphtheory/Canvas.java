@@ -59,6 +59,7 @@ public class Canvas {
         JMenu menuOptions2 = new JMenu("Extras");
         JMenu menuOptions3 = new JMenu("Window");
         JMenu menuOptions4 = new JMenu("Properties");
+        JMenu menuOptions5 = new JMenu("Centrality");
 
         JMenuItem item = new JMenuItem("Add Vertex");
         item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_DOWN_MASK));
@@ -102,12 +103,17 @@ public class Canvas {
         item = new JMenuItem("Degree");
         item.addActionListener(new MenuListener());
         menuOptions4.add(item);
+        
+        item = new JMenuItem("Closeness");
+        item.addActionListener(new MenuListener());
+        menuOptions5.add(item);
 
         menuBar.add(menuOptions1);
         menuBar.add(menuOptions);
         menuBar.add(menuOptions2);
         menuBar.add(menuOptions3);
         menuBar.add(menuOptions4);
+        menuBar.add(menuOptions5);
 
         frame.setJMenuBar(menuBar);
 
@@ -134,6 +140,7 @@ public class Canvas {
                         Vertex v = new Vertex("" + vertexList.size(), e.getX(), e.getY());
                         vertexList.add(v);
                         v.draw(graphic);
+                        //System.out.print(vertexList.size());
                         break;
                     }
                     case 4: {
@@ -200,7 +207,28 @@ public class Canvas {
                             if (v.hasIntersection(e.getX(), e.getY())) {
                                 v.wasClicked = true;
                                 clickedVertexIndex = vertexList.indexOf(v);
-                                System.out.println(vertexList.get(clickedVertexIndex).getDegree());							//print the degree to console
+                                System.out.println(vertexList.get(clickedVertexIndex).getDegree());	//print the degree to console
+                            } else {
+                                v.wasClicked = false;
+                            }
+                        }
+                        break;
+                    }
+                    case 4: {
+
+                        for (Edge d : edgeList) {
+                            if (d.hasIntersection(e.getX(), e.getY())) {
+                                d.wasClicked = true;
+                                clickedEdgeIndex = edgeList.indexOf(d);
+                            } else {
+                                d.wasClicked = false;
+                            }
+                        }
+                        for (Vertex v : vertexList) {
+                            if (v.hasIntersection(e.getX(), e.getY())) {
+                                v.wasClicked = true;
+                                clickedVertexIndex = vertexList.indexOf(v);
+                                System.out.println(vertexList.get(clickedVertexIndex).getCloseness()); //print closeness to console
                             } else {
                                 v.wasClicked = false;
                             }
@@ -237,6 +265,10 @@ public class Canvas {
                         vertexList.get(clickedVertexIndex).wasClicked = false;
                         break;
                     }
+                    case 4: {
+                        vertexList.get(clickedVertexIndex).wasClicked = false;
+                        break;
+                    }
                 }
             }
             erase();
@@ -256,6 +288,13 @@ public class Canvas {
 
                     }
                     case 3: {
+                        if (vertexList.get(clickedVertexIndex).wasClicked) {
+                            vertexList.get(clickedVertexIndex).location.x = e.getX();
+                            vertexList.get(clickedVertexIndex).location.y = e.getY();
+                        }
+                        break;
+                    }
+                    case 4: {
                         if (vertexList.get(clickedVertexIndex).wasClicked) {
                             vertexList.get(clickedVertexIndex).location.x = e.getX();
                             vertexList.get(clickedVertexIndex).location.y = e.getY();
@@ -350,6 +389,9 @@ public class Canvas {
                 erase();
             } else if (command.equals("Degree")) {
             	selectedWindow = 3;
+            	erase();
+            } else if (command.equals("Closeness")) {
+            	selectedWindow = 4;
             	erase();
             }
 
@@ -477,6 +519,15 @@ public class Canvas {
                     }
                     for (Vertex v : vertexList) {
                         v.drawDegree(g);
+                    }
+                }
+                case 4: {				//print the vertex as closeness degree
+                	vertexList = gP.getCloseness(vertexList, edgeList);
+                	for (Edge e : edgeList) {
+                        e.draw(g);
+                    }
+                    for (Vertex v : vertexList) {
+                        v.drawCloseness(g);
                     }
                 }
             }

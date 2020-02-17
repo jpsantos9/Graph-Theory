@@ -230,6 +230,25 @@ public class GraphProperties {
     	}
     	return vList;
     }
+    
+    public Vector<Vertex> getCloseness (Vector<Vertex> vList, Vector<Edge> eList){
+    	int[][] matrix = generateAdjacencyMatrix(vList, eList);
+    	float sum = 0;
+    	float closeness = 0;
+    	for (Vertex v : vList) {
+    		sum = 0;
+    		for (int i = 0; i<vList.size(); i++) {
+    			sum += matrix[Integer.parseInt(v.name)][i];
+    		}
+    		closeness = vList.size() / sum ;
+    		//System.out.println("vList" + vList.size());
+    		//System.out.println("sum" + sum);
+    		//System.out.println("close " + closeness);
+    		
+    		v.setCloseness(closeness);
+    	}
+    	return vList;
+    }
     //---------------------------------------------------------------------//
 
     private class ascendingDegreeComparator implements Comparator {
