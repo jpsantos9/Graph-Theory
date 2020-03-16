@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.AffineTransform;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.util.Vector;
@@ -30,7 +31,9 @@ public class Canvas {
     private int clickedVertexIndex;
     private int clickedEdgeIndex;
     private FileManager fileManager = new FileManager();
-
+    
+    public static boolean directedEdge[][] = new boolean[100][100];
+    
     /////////////
     private Vector<Vertex> vertexList;
     private Vector<Edge> edgeList;
@@ -76,6 +79,10 @@ public class Canvas {
         item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, KeyEvent.CTRL_DOWN_MASK));
         item.addActionListener(new MenuListener());
         menuOptions.add(item);
+        item = new JMenuItem("Add Directed Edges");
+        item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_DOWN_MASK));
+        item.addActionListener(new MenuListener());
+        menuOptions.add(item);
         item = new JMenuItem("Grab Tool");
         item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, KeyEvent.CTRL_DOWN_MASK));
         item.addActionListener(new MenuListener());
@@ -99,7 +106,7 @@ public class Canvas {
         item.addActionListener(new MenuListener());
         menuOptions3.add(item);
         
-        item = new JMenuItem("Degree");
+        item = new JMenuItem("(Out) Degree");
         item.addActionListener(new MenuListener());
         menuOptions4.add(item);
         
@@ -107,6 +114,10 @@ public class Canvas {
         item.addActionListener(new MenuListener());
         menuOptions4.add(item);
         item = new JMenuItem("Betweenness");
+        item.addActionListener(new MenuListener());
+        menuOptions4.add(item);
+        
+        item = new JMenuItem("Color");
         item.addActionListener(new MenuListener());
         menuOptions4.add(item);
         
@@ -196,7 +207,7 @@ public class Canvas {
                         break;
                     }
                     case 3: {
-
+ 
                         for (Edge d : edgeList) {
                             if (d.hasIntersection(e.getX(), e.getY())) {
                                 d.wasClicked = true;
@@ -209,7 +220,10 @@ public class Canvas {
                             if (v.hasIntersection(e.getX(), e.getY())) {
                                 v.wasClicked = true;
                                 clickedVertexIndex = vertexList.indexOf(v);
-                                System.out.println(vertexList.get(clickedVertexIndex).getDegree());	//print the degree to console
+//                                gP.getDistance(vertexList, edgeList, clickedVertexIndex, 0);
+//                                gP.printComb(gP.combination(3, 2));
+//                                System.out.println("Fault Distance: " + gP.getFaultDistance(vertexList, edgeList, clickedVertexIndex, 1, 1));
+                                //System.out.println(vertexList.get(clickedVertexIndex).getDegree());	//print the degree to console
                             } else {
                                 v.wasClicked = false;
                             }
@@ -237,6 +251,17 @@ public class Canvas {
                         }
                         break;
                     }
+                    case 5: {
+                    	for (Vertex v : vertexList) {
+                            if (v.hasIntersection(e.getX(), e.getY())) {
+                                v.wasClicked = true;
+                                clickedVertexIndex = vertexList.indexOf(v);
+                            } else {
+                                v.wasClicked = false;
+                            }
+                        }
+                        break;
+                    }
                 }
             }
 
@@ -257,6 +282,10 @@ public class Canvas {
                                 parentV.wasClicked = false;
                                 edgeList.add(edge);
                                 edge.askWeight();
+                                
+                                int x = Integer.parseInt(parentV.name);
+                                int y = Integer.parseInt(v.name);
+                                directedEdge[x][y] = false;
                             } else {
                                 v.wasClicked = false;
                             }
@@ -271,10 +300,51 @@ public class Canvas {
                         vertexList.get(clickedVertexIndex).wasClicked = false;
                         break;
                     }
+                    case 5: {
+                    	Vertex parentV = vertexList.get(clickedVertexIndex);
+                        for (Vertex v : vertexList) {
+                            if (v.hasIntersection(e.getX(), e.getY()) && v != parentV && !v.connectedToVertex(parentV)) {              //System.out.println(clickedVertexIndex+" "+vertexList.indexOf(v));
+                                Edge edge = new Edge(v, parentV);
+                                v.addVertex(parentV);
+                                parentV.addVertex(v);
+                                v.wasClicked = false;
+                                parentV.wasClicked = false;
+                                edge.directed = 1;
+                                edgeList.add(edge);
+                                edge.askWeight();
+                                
+                                int x = Integer.parseInt(parentV.name);
+                                int y = Integer.parseInt(v.name);
+                                directedEdge[x][y] = true;
+                                
+                            } else {
+                                v.wasClicked = false;
+                            }
+                        }
+                        break;
+                    }
                 }
             }
             erase();
             refresh();
+        }
+        
+        private final int ARR_SIZE = 4;
+
+        void drawArrow(Graphics g1, int x1, int y1, int x2, int y2) {
+        	Graphics2D g = (Graphics2D) g1.create();
+
+            double dx = x2 - x1, dy = y2 - y1;
+            double angle = Math.atan2(dy, dx);
+            int len = (int) Math.sqrt(dx*dx + dy*dy);
+            AffineTransform at = AffineTransform.getTranslateInstance(x1, y1);
+            at.concatenate(AffineTransform.getRotateInstance(angle));
+            g.transform(at);
+
+            // Draw horizontal arrow starting in (0, 0)
+            g.drawLine(0, 0, len, 0);
+            g.fillPolygon(new int[] {len, len-ARR_SIZE, len-ARR_SIZE, len},
+                          new int[] {0, -ARR_SIZE, ARR_SIZE, 0}, 4);
         }
 
         @Override
@@ -301,6 +371,14 @@ public class Canvas {
                             vertexList.get(clickedVertexIndex).location.x = e.getX();
                             vertexList.get(clickedVertexIndex).location.y = e.getY();
                         }
+                        break;
+                    }
+                    case 5: {
+                    	graphic.setColor(Color.RED);
+                    	
+                    	drawLine(vertexList.get(clickedVertexIndex).location.x, vertexList.get(clickedVertexIndex).location.y, e.getX(), e.getY());
+                    	drawArrow(graphic, vertexList.get(clickedVertexIndex).location.x, vertexList.get(clickedVertexIndex).location.y, e.getX(), e.getY());
+                        
                         break;
                     }
                 }
@@ -343,7 +421,9 @@ public class Canvas {
             } else if (command.equals("Grab Tool")) {
                 selectedTool = 3;
             } else if (command.equals("Remove Tool")) {
-                selectedTool = 4;
+                selectedTool = 4;  
+            } else if (command.equals("Add Directed Edges")) {
+                selectedTool = 5;
             } else if (command.equals("Auto Arrange Vertices")) {
                 arrangeVertices();
                 erase();
@@ -362,7 +442,7 @@ public class Canvas {
             } else if (command.equals("Save to File")) {
                 int returnValue = fileManager.jF.showSaveDialog(frame);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
-                    fileManager.saveFile(vertexList,fileManager.jF.getSelectedFile());
+                    fileManager.saveFile(vertexList, edgeList, fileManager.jF.getSelectedFile());
                     System.out.println(fileManager.jF.getSelectedFile());
                 }
             } else if (command.equals("Graph")) {
@@ -389,7 +469,7 @@ public class Canvas {
                 //gP.drawNWideDiameter();
                 }
                 erase();
-            } else if (command.equals("Degree")) {
+            } else if (command.equals("(Out) Degree")) {
             	selectedWindow = 3;
             	erase();
             } else if (command.equals("Closeness")) {
@@ -397,6 +477,9 @@ public class Canvas {
             	erase();
             } else if (command.equals("Betweenness")) {
             	selectedWindow = 5;
+            	erase();
+            } else if (command.equals("Color")) {
+            	selectedWindow =6;
             	erase();
             }
 
@@ -499,7 +582,8 @@ public class Canvas {
                 case 0: {   //graph window
                     graphic.drawString("Vertex Count=" + vertexList.size() +
                             "  Edge Count=" + edgeList.size() +
-                            "  Selected Tool=" + selectedTool, 50, height / 2 + (height * 2) / 5);
+                            "  Selected Tool=" + selectedTool + 
+                    		" Density=" + gP.getDensity(vertexList, edgeList), 50, height / 2 + (height * 2) / 5);
                     g.drawImage(canvasImage, 0, 0, null); //layer 1
                     g.setColor(Color.black);
                     break;
@@ -514,7 +598,12 @@ public class Canvas {
                     g.drawImage(canvasImage.getScaledInstance(width / 2, height / 2, Image.SCALE_SMOOTH), 0, 0, null); //layer 1
                     g.draw3DRect(0, 0, width / 2, height / 2, true);
                     g.setColor(Color.black);
-
+                    
+                    vertexList = gP.getColorization(vertexList, edgeList);
+                    System.out.println("-------COLORIZATION------");
+                    for (Vertex v : vertexList) {
+                    	System.out.println(v.name + " : " + v.color);
+                    }
                     break;
                 }
                 case 3: {				//print the vertex as degree
@@ -548,6 +637,17 @@ public class Canvas {
                     }
                     for (Vertex v : vertexList) {
                         v.drawBetweenness(g);
+                    }
+                    
+                    break;
+                }
+                case 6: {
+                	vertexList = gP.getColorization(vertexList, edgeList);
+                	for (Edge e : edgeList) {
+                        e.draw(g);
+                    }
+                    for (Vertex v : vertexList) {
+                        v.drawColor(g);
                     }
                     
                     break;

@@ -6,8 +6,10 @@ package graphtheory;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -30,9 +32,18 @@ public class GraphProperties {
             }
         }
 
+    	boolean directed = false;
+    	
         for (int i = 0; i < eList.size(); i++) {
-            adjacencyMatrix[vList.indexOf(eList.get(i).vertex1)][vList.indexOf(eList.get(i).vertex2)] = eList.get(i).weight;
-            adjacencyMatrix[vList.indexOf(eList.get(i).vertex2)][vList.indexOf(eList.get(i).vertex1)] = eList.get(i).weight;
+        	directed = Canvas.directedEdge[vList.indexOf(eList.get(i).vertex2)][vList.indexOf(eList.get(i).vertex1)];    // calling the array arr from that object
+        	
+        	if(directed == true){
+        	 	adjacencyMatrix[vList.indexOf(eList.get(i).vertex2)][vList.indexOf(eList.get(i).vertex1)] = eList.get(i).weight;
+        	}
+        	else{
+        	 	adjacencyMatrix[vList.indexOf(eList.get(i).vertex1)][vList.indexOf(eList.get(i).vertex2)] = eList.get(i).weight;
+                adjacencyMatrix[vList.indexOf(eList.get(i).vertex2)][vList.indexOf(eList.get(i).vertex1)] = eList.get(i).weight;
+        	}
         }
         return adjacencyMatrix;
     }
@@ -306,6 +317,267 @@ public class GraphProperties {
     	}
     	return parents;
     }
+    
+    public Vector<Vertex> getColorization(Vector<Vertex> vList, Vector<Edge> eList) {
+    	int[][] matrix = generateAdjacencyMatrix(vList, eList);
+    	Vector<Integer> colored = new Vector<Integer>();
+    	int numColor = 1;
+    	vList.get(0).setColor(numColor);		//set color of first vertex
+    	colored.add(0);
+    	int found = 0;
+    	
+    	while (colored.size()<vList.size()) {
+    		for (int i=1; i<vList.size(); i++) {
+    			for (int n : colored) {
+    				if (matrix[i][n]>0 && vList.get(n).color==numColor) {	//check if connected to colored
+    					found++;
+    				}
+    			}
+    			if (found==0) {
+    				vList.get(i).setColor(numColor);
+    				colored.add(i);
+    			} else {
+    				found = 0;
+    			}
+    		}
+    		numColor++;
+    		for (int j=1; j<vList.size(); j++) {
+    			if (!colored.contains(j)) {
+    				vList.get(j).setColor(numColor);
+    				colored.add(j);
+    				break;
+    			}
+    		}
+    	}
+    	
+    	return vList;
+    }
+    
+    public int getDistance(Vector<Vertex> vList, Vector<Edge> eList, int start, int end) {
+    	 int[][] matrix = generateAdjacencyMatrix(vList, eList);
+    	 int[] path;
+    	 int distance = 0;
+    	 
+    	 try {
+    		 path = dijkstra(matrix, start);
+//    		 System.out.println("Path");
+//        	 for (int i=0; i<path.length; i++) {
+//        		 System.out.print(path[i] + "|" );
+//        	 }
+        	 
+        	 //get the weights
+        	 
+        	 int prevIndex = end;
+        	 int nextIndex = path[prevIndex];
+        	 
+        	 System.out.println("Shortest Distance from " + start + "-" + end);
+        	 while (nextIndex != -1) {
+//        		 for (Edge e : eList) {
+//        			 //System.out.println(e.vertex1.name + " : " + Integer.parseInt(e.vertex2.name));
+//        			 if ((Integer.parseInt(e.vertex1.name) == prevIndex && Integer.parseInt(e.vertex2.name) == nextIndex) || (Integer.parseInt(e.vertex1.name) == nextIndex && Integer.parseInt(e.vertex2.name) == prevIndex)) {
+//        				 distance += e.weight;
+//        			 }
+//        		 }
+        		 System.out.println(prevIndex + " : " + nextIndex);
+        		 distance += matrix[prevIndex][nextIndex];
+        		 prevIndex = nextIndex;
+        		 nextIndex = path[prevIndex];
+        	 }
+        	 System.out.println("distance : " + distance);
+        	 return distance;
+    	 } catch (Exception e) {
+    		 System.out.println("Disconnected");
+    		 return -1;
+    	 }
+     }
+    
+    public int getDistance(int[][] matrix, int start, int end) {
+	   	 int[] path;
+	   	 int distance = 0;
+	   	 
+	   	 try {
+	   		 path = dijkstra(matrix, start);
+	       	 
+	       	 int prevIndex = end;
+	       	 int nextIndex = path[prevIndex];
+	       	 
+	       	 System.out.println("Shortest Distance from " + start + "-" + end);
+	       	 while (nextIndex != -1) {
+	       		 System.out.println(prevIndex + " : " + nextIndex);
+	       		 distance += matrix[prevIndex][nextIndex];
+	       		 prevIndex = nextIndex;
+	       		 nextIndex = path[prevIndex];
+	       	 }
+	       	 System.out.println("distance : " + distance);
+	       	 return distance;
+	   	 } catch (Exception e) {
+	   		 System.out.println("Disconnected");
+	   		 return -1;
+	   	 }
+    }
+     
+     public List<int[]> combination(int n, int r) {
+    	 List<int[]> combinations = new ArrayList<>();
+    	 int[] combination = new int[r];
+
+    	 // initialize with lowest lexicographic combination
+    	 for (int i = 0; i < r; i++) {
+    		 combination[i] = i;
+    	 }
+
+    	 while (combination[r - 1] < n) {
+    		 combinations.add(combination.clone());
+    	
+	    	 // generate next combination in lexicographic order
+	    	 int t = r - 1;
+	    	 while (t != 0 && combination[t] == n - r + t) {
+	    		 t--;
+	    	 }
+	    	 combination[t]++;
+	    	 for (int i = t + 1; i < r; i++) {
+	    		 combination[i] = combination[i - 1] + 1;
+	    	 }
+    	 }
+    	 return combinations;
+     }
+     
+     public void printComb(List<int[]> mylist) {
+    	 for (int[] elem : mylist) {
+    		 System.out.print("[");
+    		 for (int e : elem) {
+    			 System.out.print(e + ", ");
+    		 }
+    		 System.out.println("]");
+    	 }
+     }
+     
+     public int getFaultDistance(Vector<Vertex> vList, Vector<Edge> eList, int start, int end, int w) {
+    	 int[][] matrix = generateAdjacencyMatrix(vList, eList);
+    	 int[] includedVertex = new int[vList.size()-w];
+    	 int maxDistance = 0;
+    	 includedVertex[0]=2;
+    	 includedVertex[1]=1;
+    	 includedVertex[2]=3;
+    	 
+    	 // generate the combination of vertices 
+    	 List<int[]> includedList = combination(vList.size(), vList.size()-w);
+    	 
+    	 for (int[] elem : includedList) {
+    		 int newEnd=0;
+    		 int newStart=0;
+    		 if (ifInclude(elem, start) && ifInclude(elem, end)) {
+    			 int[][] tempMatrix = new int[vList.size()-w][vList.size()-w];
+            	 System.out.println("length: " + elem.length);
+            	 for (int i=0; i<elem.length; i++) {
+            		 if (end == elem[i]) {
+            			 newEnd = i;
+            		 }
+            		 if (start == elem[i]) {
+            			 newStart = i;
+            		 }
+            		 for (int j=0; j<elem.length; j++) {
+            			 tempMatrix[i][j] = matrix[elem[i]][elem[j]];
+            		 }
+            	 }
+            	 if (maxDistance<getDistance(tempMatrix, newStart, newEnd)) {
+            		 maxDistance = getDistance(tempMatrix, newStart, newEnd);
+            	 }
+    		 }
+    	 }
+    	 
+    	 
+//    	 int[][] tempMatrix = new int[vList.size()-w][vList.size()-w];
+//    	 System.out.println("length: " + includedVertex.length);
+//    	 for (int i=0; i<includedVertex.length; i++) {
+//    		 if (end == includedVertex[i]) {
+//    			 end = i;
+//    		 }
+//    		 for (int j=0; j<includedVertex.length; j++) {
+//    			 tempMatrix[i][j] = matrix[includedVertex[i]][includedVertex[j]];
+//    		 }
+//    	 }
+//    	 printMatrix(tempMatrix);
+//    	 
+//    	 getDistance(tempMatrix, start, end);
+    	 return maxDistance;
+     }
+     
+     public boolean ifInclude(int[] list, int x) {
+    	 for (int e : list) {
+    		 if (e == x) {
+    			 return true;
+    		 }
+    	 }
+    	 return false;
+     }
+     
+     public void printMatrix (int[][] matrix) {
+    	 for (int i=0; i<matrix[0].length; i++) {
+    		 for (int j=0; j<matrix[0].length; j++) {
+    			 System.out.print("|" + matrix[i][j]);
+    		 }
+    		 System.out.println();
+    	 }
+     }
+    
+    //////// MM 
+    public float getDensity (Vector<Vertex> vList, Vector<Edge> eList) {  // formula for undirected graphs
+    	int vNum = vList.size();
+    	int eNum = eList.size();
+    	int numerator = ( 2 * eNum );
+    	int denominator = (vNum) * ( vNum - 1 );
+    	float density = (float) numerator / denominator;
+    	return density;
+    }
+    
+    public int getDiameter (int[][] matrix) {
+    	int diameter = 0;
+    	int rowLen = matrix.length;
+    	int colLen = matrix[0].length;
+    	//(i,j) will be your vertex pair
+    	for (int i = 0; i < rowLen; i++) {
+    		for (int j = 0; j < colLen; j++) {
+    			int currDistance = getDistance(matrix, i, j);
+    			if ( currDistance > diameter) {
+    				diameter = currDistance;
+    			}
+    		}
+    	}
+    	
+    	return diameter;
+    }
+
+    public int getFaultDiameter (Vector<Vertex> vList, Vector<Edge> eList, int w) {
+    	int faultDiameter = 0;
+    	int[][] matrix = generateAdjacencyMatrix(vList, eList);
+    	Vector<Vertex> tempVlist = new Vector<Vertex>();
+    	Vector<Edge> tempElist = new Vector<Edge>();
+    	
+    	List<int[]> includedList = combination(vList.size(), vList.size()-w);
+      	 
+   	 	for (int[] elem : includedList) {
+   	 		//check if connected ang graph
+   	 		
+ 			int[][] tempMatrix = new int[vList.size()-w][vList.size()-w];	//G-S
+ 			System.out.println("length: " + elem.length);
+ 			for (int i=0; i<elem.length; i++) {
+ 				for (int j=0; j<elem.length; j++) {
+ 					tempMatrix[i][j] = matrix[elem[i]][elem[j]];
+ 				}
+	 		}
+ 			if (faultDiameter < getDiameter(tempMatrix)) {
+ 				faultDiameter = getDiameter(tempMatrix);
+ 			}
+   	 	}
+   	 	
+    	
+    	return faultDiameter;
+    }
+    
+   //////// MM 
+    
+    
+    
     //---------------------------------------------------------------------//
 
     private class ascendingDegreeComparator implements Comparator {

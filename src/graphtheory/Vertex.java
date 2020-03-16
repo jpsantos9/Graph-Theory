@@ -25,6 +25,7 @@ public class Vertex implements Comparable {
     public int degree;
     public float closeness;
     public int betweenness;
+    public int color = 0;
 
     public Vertex(String name, int x, int y) {
         this.name = name;
@@ -46,6 +47,10 @@ public class Vertex implements Comparable {
     
     public void setBetweenness(int betweenness) {
     	this.betweenness = betweenness;
+    }
+    
+    public void setColor(int color) {
+    	this.color = color;
     }
 
     public boolean hasIntersection(int x, int y) {
@@ -145,5 +150,26 @@ public class Vertex implements Comparable {
         g.fillOval(location.x - size1 / 2, location.y - size1 / 2, size1+betweenness, size1+betweenness);
         g.setColor(Color.BLACK);
         g.drawString(Integer.toString(betweenness), location.x, location.y);
+    }
+    
+ 
+    
+    
+    
+    public void drawColor(Graphics g) {
+    	if (wasClicked) {
+            g.setColor(Color.red);
+        } else if (wasFocused) {
+            g.setColor(Color.blue);
+        } else {
+            g.setColor(Color.black);
+        }
+
+        g.fillOval(location.x - size2 / 2, location.y - size2 / 2, size2+betweenness, size2+betweenness);
+//        g.setColor(new Color(color+color*100));
+        g.setColor(Color.getHSBColor(color/10f, 1.00f, 1.00f));
+        g.fillOval(location.x - size1 / 2, location.y - size1 / 2, size1+betweenness, size1+betweenness);
+        g.setColor(Color.BLACK);
+        g.drawString(Integer.toString(color), location.x, location.y);
     }
 }
