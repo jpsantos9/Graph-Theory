@@ -33,7 +33,6 @@ public class Canvas {
     private FileManager fileManager = new FileManager();
     
     public static boolean directedEdge[][] = new boolean[100][100];
-    public static int normalizedBetweennes = 0;
     
     /////////////
     private Vector<Vertex> vertexList;
@@ -115,9 +114,6 @@ public class Canvas {
         item.addActionListener(new MenuListener());
         menuOptions4.add(item);
         item = new JMenuItem("Betweenness");
-        item.addActionListener(new MenuListener());
-        menuOptions4.add(item);
-        item = new JMenuItem("Normalized Betweenness");
         item.addActionListener(new MenuListener());
         menuOptions4.add(item);
         
@@ -486,10 +482,6 @@ public class Canvas {
             	selectedWindow =6;
             	erase();
             }
-            else if (command.equals("Normalized Betweenness")) {
-            	selectedWindow = 7;
-            	erase();
-            }
 
             refresh();
         }
@@ -658,21 +650,6 @@ public class Canvas {
                         v.drawColor(g);
                     }
                     
-                    break;
-                }
-                case 7: {
-                	normalizedBetweennes = 1;
-                	for (Vertex v : vertexList) {
-                    	v.setBetweenness(gP.getBetweenness(gP.generateAdjacencyMatrix(vertexList, edgeList), Integer.parseInt(v.name)));
-                    }
-                	for (Edge e : edgeList) {
-                        e.draw(g);
-                    }
-                    for (Vertex v : vertexList) {
-                        v.drawBetweenness(g);
-                    }
-                    
-                    normalizedBetweennes = 0;
                     break;
                 }
             }
