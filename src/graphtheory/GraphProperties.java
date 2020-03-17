@@ -242,6 +242,23 @@ public class GraphProperties {
     	return vList;
     }
     
+    public Vector<Vertex> getNormalizedDegree (Vector<Vertex> vList, Vector<Edge> eList) {
+    	int[][] matrix = generateAdjacencyMatrix(vList, eList);
+    	float normalizedDegree = 0;
+    	float degree = 0;
+    	float denominator = vList.size() - 1;
+    	for (Vertex v : vList) {
+    		degree = 0;
+    		for (int i = 0; i<vList.size(); i++) {
+    			degree += matrix[Integer.parseInt(v.name)][i];
+    		}
+    		normalizedDegree = degree / denominator;
+    		System.out.println("normalized " + normalizedDegree);
+    		v.setNormalizedDegree(normalizedDegree);
+    	}    	
+    	return vList;
+    }
+    
     public Vector<Vertex> getCloseness (Vector<Vertex> vList, Vector<Edge> eList){
     	int[][] matrix = generateAdjacencyMatrix(vList, eList);
     	float sum = 0;

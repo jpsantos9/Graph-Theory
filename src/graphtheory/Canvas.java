@@ -109,6 +109,9 @@ public class Canvas {
         item = new JMenuItem("(Out) Degree");
         item.addActionListener(new MenuListener());
         menuOptions4.add(item);
+        item = new JMenuItem("Normalized Degree");
+        item.addActionListener(new MenuListener());
+        menuOptions4.add(item);
         
         item = new JMenuItem("Closeness");
         item.addActionListener(new MenuListener());
@@ -487,7 +490,11 @@ public class Canvas {
             } else if (command.equals("Normalized Betweenness")) {
             	selectedWindow = 7;
             	erase();
+            } else if (command.equals("Normalized Degree")) {
+            	selectedWindow = 8;
+            	erase();
             }
+            
 
             refresh();
         }
@@ -667,6 +674,17 @@ public class Canvas {
                     }
                     for (Vertex v : vertexList) {
                         v.drawNormalizedBetweenness(g);
+                    }
+                    
+                    break;
+                }
+                case 8: {
+                	vertexList = gP.getNormalizedDegree(vertexList, edgeList);
+                	for (Edge e : edgeList) {
+                        e.draw(g);
+                    }
+                    for (Vertex v : vertexList) {
+                        v.drawNormalizedDegree(g);
                     }
                     
                     break;
