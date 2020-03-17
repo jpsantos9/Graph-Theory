@@ -25,6 +25,7 @@ public class Vertex implements Comparable {
     public int degree;
     public float closeness;
     public int betweenness;
+    public float normalizedBetweenness;
     public int color = 0;
 
     public Vertex(String name, int x, int y) {
@@ -47,6 +48,10 @@ public class Vertex implements Comparable {
     
     public void setBetweenness(int betweenness) {
     	this.betweenness = betweenness;
+    }
+    
+    public void setNormalizedBetweenness(float normalizedBetweenness) {
+    	this.normalizedBetweenness = normalizedBetweenness;
     }
     
     public void setColor(int color) {
@@ -152,9 +157,21 @@ public class Vertex implements Comparable {
         g.drawString(Integer.toString(betweenness), location.x, location.y);
     }
     
- 
-    
-    
+    public void drawNormalizedBetweenness(Graphics g) {
+        if (wasClicked) {
+            g.setColor(Color.red);
+        } else if (wasFocused) {
+            g.setColor(Color.blue);
+        } else {
+            g.setColor(Color.black);
+        }
+
+        g.fillOval(location.x - size2 / 2, location.y - size2 / 2, size2+betweenness, size2+betweenness);
+        g.setColor(Color.YELLOW);
+        g.fillOval(location.x - size1 / 2, location.y - size1 / 2, size1+betweenness, size1+betweenness);
+        g.setColor(Color.BLACK);
+        g.drawString(Float.toString(normalizedBetweenness), location.x, location.y);
+    }
     
     public void drawColor(Graphics g) {
     	if (wasClicked) {

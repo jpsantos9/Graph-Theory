@@ -116,6 +116,9 @@ public class Canvas {
         item = new JMenuItem("Betweenness");
         item.addActionListener(new MenuListener());
         menuOptions4.add(item);
+        item = new JMenuItem("Normalized Betweenness");
+        item.addActionListener(new MenuListener());
+        menuOptions4.add(item);
         
         item = new JMenuItem("Color");
         item.addActionListener(new MenuListener());
@@ -479,7 +482,10 @@ public class Canvas {
             	selectedWindow = 5;
             	erase();
             } else if (command.equals("Color")) {
-            	selectedWindow =6;
+            	selectedWindow = 6;
+            	erase();
+            } else if (command.equals("Normalized Betweenness")) {
+            	selectedWindow = 7;
             	erase();
             }
 
@@ -648,6 +654,19 @@ public class Canvas {
                     }
                     for (Vertex v : vertexList) {
                         v.drawColor(g);
+                    }
+                    
+                    break;
+                }
+                case 7: {
+                	for (Vertex v : vertexList) {
+                    	v.setNormalizedBetweenness(gP.getNormalizedBetweenness(gP.generateAdjacencyMatrix(vertexList, edgeList), Integer.parseInt(v.name)));
+                    }
+                	for (Edge e : edgeList) {
+                        e.draw(g);
+                    }
+                    for (Vertex v : vertexList) {
+                        v.drawNormalizedBetweenness(g);
                     }
                     
                     break;

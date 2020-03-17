@@ -283,6 +283,32 @@ public class GraphProperties {
     	return value;
     }
     
+    public float getNormalizedBetweenness(int[][] adjacencyMatrix, int except) {
+    	
+    	int[] path;
+    	Vector<Integer> passed = new Vector<Integer>();
+    	passed.add(except);
+    	int value = 0;
+    	float denominator = (float) (adjacencyMatrix.length);
+    	denominator = (denominator - 1) * ( denominator - 2) / 2;
+    	for (int i = 0; i<adjacencyMatrix[0].length; i++) {
+    		if (i!=except) {
+    			path = dijkstra(adjacencyMatrix, i);
+    			for (int j=i; j<path.length; j++) {
+    				if (passed.contains(path[j])) {
+    					value++;
+    					passed.add(j);
+    				}
+    			}
+    			passed = new Vector<Integer>();
+    	    	passed.add(except);
+    		}
+    	}
+    	float normalizedBetweenness = 0;
+    		normalizedBetweenness = value / denominator;
+    	return normalizedBetweenness;
+    }
+    
     public int[] dijkstra(int[][] adjacencyMatrix, int startVertex) { 
     	int nVertices = adjacencyMatrix[0].length;
     	int[] shortestDistances = new int[nVertices];
