@@ -261,10 +261,12 @@ public class GraphProperties {
     	return vList;
     }
     
+    
     public int getBetweenness(int[][] adjacencyMatrix, int except) {
     	
     	int[] path;
     	Vector<Integer> passed = new Vector<Integer>();
+    	Vector<Vertex> vList = new Vector<Vertex>();
     	passed.add(except);
     	int value = 0;
     	for (int i = 0; i<adjacencyMatrix[0].length; i++) {
@@ -279,6 +281,9 @@ public class GraphProperties {
     			passed = new Vector<Integer>();
     	    	passed.add(except);
     		}
+    	}
+    	if(Canvas.normalizedBetweennes == 1) {
+    		value = value / ((vList.size() - 2)*(vList.size() - 1));
     	}
     	return value;
     }
