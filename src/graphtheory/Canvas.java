@@ -109,6 +109,9 @@ public class Canvas {
         item = new JMenuItem("(Out) Degree");
         item.addActionListener(new MenuListener());
         menuOptions4.add(item);
+        item = new JMenuItem("(In) Degree");
+        item.addActionListener(new MenuListener());
+        menuOptions4.add(item);
         item = new JMenuItem("Normalized Degree");
         item.addActionListener(new MenuListener());
         menuOptions4.add(item);
@@ -493,6 +496,9 @@ public class Canvas {
             } else if (command.equals("Normalized Degree")) {
             	selectedWindow = 8;
             	erase();
+            } else if (command.equals("(In) Degree")) {
+            	selectedWindow = 9;
+            	erase();
             }
             
 
@@ -685,6 +691,17 @@ public class Canvas {
                     }
                     for (Vertex v : vertexList) {
                         v.drawNormalizedDegree(g);
+                    }
+                    
+                    break;
+                }
+                case 9: {
+                	vertexList = gP.getInDegree(vertexList, edgeList);
+                	for (Edge e : edgeList) {
+                        e.draw(g);
+                    }
+                    for (Vertex v : vertexList) {
+                        v.drawInDegree(g);;
                     }
                     
                     break;
