@@ -242,6 +242,19 @@ public class GraphProperties {
     	return vList;
     }
     
+    public Vector<Vertex> getInDegree (Vector<Vertex> vList, Vector<Edge> eList){
+    	int[][] matrix = generateAdjacencyMatrix(vList, eList);
+    	int sum = 0;
+    	for (Vertex v : vList) {
+    		sum = 0;
+    		for (int i = 0; i<vList.size(); i++) {
+    			sum += matrix[i][Integer.parseInt(v.name)];
+    		}
+    		v.setInDegree(sum);
+    	}
+    	return vList;
+    }
+    
     public Vector<Vertex> getNormalizedDegree (Vector<Vertex> vList, Vector<Edge> eList) {
     	int[][] matrix = generateAdjacencyMatrix(vList, eList);
     	float normalizedDegree = 0;
@@ -331,7 +344,7 @@ public class GraphProperties {
 			centralization = numerator / denominator;
 			v.setCentralization(centralization);
 		}
-		System.out.println("Centralization= " + centralization);
+		//System.out.println("Centralization= " + centralization);
     	return centralization;
     }
     
@@ -618,8 +631,8 @@ public class GraphProperties {
     		 }
     		 System.out.println();
     	 }
-     }     
-     
+     }
+    
     //////// MM 
     public float getDensity (Vector<Vertex> vList, Vector<Edge> eList) {  // formula for undirected graphs
     	int vNum = vList.size();
@@ -720,6 +733,31 @@ public class GraphProperties {
                 return 0;
             }
         }
+    }
+    
+    public Vector<Vertex> getEigenvector (Vector<Vertex> vList, Vector<Edge> eList){
+    	int[][] matrix = generateAdjacencyMatrix(vList, eList);
+    	int sum = 0;
+    	int[] degreeCentrality = new int[vList.size()]; 
+    	for (Vertex v : vList) {
+    		sum = 0;
+    		for (int i = 0; i<vList.size(); i++) {
+    			sum += matrix[Integer.parseInt(v.name)][i];
+    		}
+    		degreeCentrality[Integer.parseInt(v.name)] = sum;
+    	}
+    	
+    	int eigenvectorCentrality = 0;
+    	
+    	for (Vertex v : vList) {
+    		eigenvectorCentrality = 0;
+    		for(int i = 0; i<vList.size(); i++) {
+    			eigenvectorCentrality += (matrix[Integer.parseInt(v.name)][i]) * (degreeCentrality[i]);
+    		}
+    		v.setEigenvectorCentrality(eigenvectorCentrality);
+    	}
+    	
+    	return vList;
     }
     
 }

@@ -14,7 +14,7 @@ import java.awt.Graphics;
  * @author mk
  */
 public class Vertex implements Comparable {
-
+	
     public String name;
     public Point location;
     public boolean wasFocused;
@@ -23,13 +23,15 @@ public class Vertex implements Comparable {
     private int size2 = 50;
     public Vector<Vertex> connectedVertices;
     public int degree;
+    public int inDegree;
     public float normalizedDegree;
     public float closeness;
     public float normalizedCloseness;
     public int betweenness;
     public float normalizedBetweenness;
+    public int eigenvectorCentrality;
     public int color = 0;
-	private float centralization;
+    private float centralization;
 
     public Vertex(String name, int x, int y) {
         this.name = name;
@@ -43,6 +45,10 @@ public class Vertex implements Comparable {
     
     public void setDegree(int degree) {
     	this.degree = degree;
+    }
+    
+    public void setInDegree(int degree) {
+    	this.inDegree = degree;
     }
     
     public void setNormalizedDegree(float normalizedDegree) {
@@ -67,6 +73,9 @@ public class Vertex implements Comparable {
     
     public void setNormalizedBetweenness(float normalizedBetweenness) {
     	this.normalizedBetweenness = normalizedBetweenness;
+    }
+    public void setEigenvectorCentrality(int eigenvectorCentrality) {
+    	this.eigenvectorCentrality = eigenvectorCentrality;
     }
     
     public void setColor(int color) {
@@ -146,6 +155,22 @@ public class Vertex implements Comparable {
         g.fillOval(location.x - size1 / 2, location.y - size1 / 2, size1+degree, size1+degree);
         g.setColor(Color.BLACK);
         g.drawString(Integer.toString(degree), location.x, location.y);
+    }
+    
+    public void drawInDegree(Graphics g) {
+    	if (wasClicked) {
+            g.setColor(Color.red);
+        } else if (wasFocused) {
+            g.setColor(Color.blue);
+        } else {
+            g.setColor(Color.black);
+        }
+
+        g.fillOval(location.x - size2 / 2, location.y - size2 / 2, size2+degree, size2+degree);
+        g.setColor(Color.CYAN);
+        g.fillOval(location.x - size1 / 2, location.y - size1 / 2, size1+degree, size1+degree);
+        g.setColor(Color.BLACK);
+        g.drawString(Integer.toString(inDegree), location.x, location.y);
     }
     
     public void drawNormalizedDegree(Graphics g) {
@@ -228,6 +253,22 @@ public class Vertex implements Comparable {
         g.drawString(Float.toString(normalizedBetweenness), location.x, location.y);
     }
     
+    public void drawEigenvectorCentrality(Graphics g) {
+        if (wasClicked) {
+            g.setColor(Color.red);
+        } else if (wasFocused) {
+            g.setColor(Color.blue);
+        } else {
+            g.setColor(Color.black);
+        }
+
+        g.fillOval(location.x - size2 / 2, location.y - size2 / 2, size2+betweenness, size2+betweenness);
+        g.setColor(Color.ORANGE);
+        g.fillOval(location.x - size1 / 2, location.y - size1 / 2, size1+betweenness, size1+betweenness);
+        g.setColor(Color.BLACK);
+        g.drawString(Integer.toString(eigenvectorCentrality), location.x, location.y);
+    }
+    
     public void drawColor(Graphics g) {
     	if (wasClicked) {
             g.setColor(Color.red);
@@ -243,5 +284,8 @@ public class Vertex implements Comparable {
         g.fillOval(location.x - size1 / 2, location.y - size1 / 2, size1+betweenness, size1+betweenness);
         g.setColor(Color.BLACK);
         g.drawString(Integer.toString(color), location.x, location.y);
+    }
+    public int getEigenvector() {
+        return connectedVertices.size();
     }
 }
