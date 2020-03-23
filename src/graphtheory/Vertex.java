@@ -28,6 +28,7 @@ public class Vertex implements Comparable {
     public float closeness;
     public int betweenness;
     public float normalizedBetweenness;
+    public int eigenvectorCentrality;
     public int color = 0;
 
     public Vertex(String name, int x, int y) {
@@ -62,6 +63,9 @@ public class Vertex implements Comparable {
     
     public void setNormalizedBetweenness(float normalizedBetweenness) {
     	this.normalizedBetweenness = normalizedBetweenness;
+    }
+    public void setEigenvectorCentrality(int eigenvectorCentrality) {
+    	this.eigenvectorCentrality = eigenvectorCentrality;
     }
     
     public void setColor(int color) {
@@ -215,6 +219,22 @@ public class Vertex implements Comparable {
         g.drawString(Float.toString(normalizedBetweenness), location.x, location.y);
     }
     
+    public void drawEigenvectorCentrality(Graphics g) {
+        if (wasClicked) {
+            g.setColor(Color.red);
+        } else if (wasFocused) {
+            g.setColor(Color.blue);
+        } else {
+            g.setColor(Color.black);
+        }
+
+        g.fillOval(location.x - size2 / 2, location.y - size2 / 2, size2+betweenness, size2+betweenness);
+        g.setColor(Color.ORANGE);
+        g.fillOval(location.x - size1 / 2, location.y - size1 / 2, size1+betweenness, size1+betweenness);
+        g.setColor(Color.BLACK);
+        g.drawString(Integer.toString(eigenvectorCentrality), location.x, location.y);
+    }
+    
     public void drawColor(Graphics g) {
     	if (wasClicked) {
             g.setColor(Color.red);
@@ -230,5 +250,8 @@ public class Vertex implements Comparable {
         g.fillOval(location.x - size1 / 2, location.y - size1 / 2, size1+betweenness, size1+betweenness);
         g.setColor(Color.BLACK);
         g.drawString(Integer.toString(color), location.x, location.y);
+    }
+    public int getEigenvector() {
+        return connectedVertices.size();
     }
 }

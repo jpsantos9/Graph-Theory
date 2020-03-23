@@ -125,6 +125,9 @@ public class Canvas {
         item = new JMenuItem("Normalized Betweenness");
         item.addActionListener(new MenuListener());
         menuOptions4.add(item);
+        item = new JMenuItem("Eigenvector Centrality");
+        item.addActionListener(new MenuListener());
+        menuOptions4.add(item);
         
         item = new JMenuItem("Color");
         item.addActionListener(new MenuListener());
@@ -499,6 +502,9 @@ public class Canvas {
             } else if (command.equals("(In) Degree")) {
             	selectedWindow = 9;
             	erase();
+            } else if (command.equals("Eigenvector Centrality")) {
+            	selectedWindow = 10;
+            	erase();
             }
             
 
@@ -702,6 +708,17 @@ public class Canvas {
                     }
                     for (Vertex v : vertexList) {
                         v.drawInDegree(g);;
+                    }
+                    
+                    break;
+                }
+                case 10: {
+                	vertexList = gP.getEigenvector(vertexList, edgeList);
+                	for (Edge e : edgeList) {
+                        e.draw(g);
+                    }
+                    for (Vertex v : vertexList) {
+                        v.drawEigenvectorCentrality(g);
                     }
                     
                     break;

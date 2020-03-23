@@ -678,4 +678,29 @@ public class GraphProperties {
         }
     }
     
+    public Vector<Vertex> getEigenvector (Vector<Vertex> vList, Vector<Edge> eList){
+    	int[][] matrix = generateAdjacencyMatrix(vList, eList);
+    	int sum = 0;
+    	int[] degreeCentrality = new int[vList.size()]; 
+    	for (Vertex v : vList) {
+    		sum = 0;
+    		for (int i = 0; i<vList.size(); i++) {
+    			sum += matrix[Integer.parseInt(v.name)][i];
+    		}
+    		degreeCentrality[Integer.parseInt(v.name)] = sum;
+    	}
+    	
+    	int eigenvectorCentrality = 0;
+    	
+    	for (Vertex v : vList) {
+    		eigenvectorCentrality = 0;
+    		for(int i = 0; i<vList.size(); i++) {
+    			eigenvectorCentrality += (matrix[Integer.parseInt(v.name)][i]) * (degreeCentrality[i]);
+    		}
+    		v.setEigenvectorCentrality(eigenvectorCentrality);
+    	}
+    	
+    	return vList;
+    }
+    
 }
