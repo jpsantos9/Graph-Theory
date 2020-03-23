@@ -119,6 +119,9 @@ public class Canvas {
         item = new JMenuItem("Closeness");
         item.addActionListener(new MenuListener());
         menuOptions4.add(item);
+        item = new JMenuItem("Normalized Closeness");
+        item.addActionListener(new MenuListener());
+        menuOptions4.add(item);
         item = new JMenuItem("Betweenness");
         item.addActionListener(new MenuListener());
         menuOptions4.add(item);
@@ -505,6 +508,9 @@ public class Canvas {
             } else if (command.equals("Eigenvector Centrality")) {
             	selectedWindow = 10;
             	erase();
+            } else if (command.equals("Normalized Closeness")) {
+            	selectedWindow = 11;
+            	erase();
             }
             
 
@@ -608,7 +614,8 @@ public class Canvas {
                     graphic.drawString("Vertex Count=" + vertexList.size() +
                             "  Edge Count=" + edgeList.size() +
                             "  Selected Tool=" + selectedTool + 
-                    		" Density=" + gP.getDensity(vertexList, edgeList), 50, height / 2 + (height * 2) / 5);
+                            " Density=" + gP.getDensity(vertexList, edgeList) +
+                            " Centralization=" + gP.getCentralization(vertexList, edgeList), 50, height / 2 + (height * 2) / 5);
                     g.drawImage(canvasImage, 0, 0, null); //layer 1
                     g.setColor(Color.black);
                     break;
@@ -719,6 +726,17 @@ public class Canvas {
                     }
                     for (Vertex v : vertexList) {
                         v.drawEigenvectorCentrality(g);
+                    }
+                    
+                    break;
+                }
+                case 11: {				//print the vertex as normalized closeness degree
+                	vertexList = gP.getNormalizedCloseness(vertexList, edgeList);
+                	for (Edge e : edgeList) {
+                        e.draw(g);
+                    }
+                    for (Vertex v : vertexList) {
+                        v.drawNormalizedCloseness(g);
                     }
                     
                     break;

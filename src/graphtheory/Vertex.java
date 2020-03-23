@@ -14,7 +14,7 @@ import java.awt.Graphics;
  * @author mk
  */
 public class Vertex implements Comparable {
-
+	
     public String name;
     public Point location;
     public boolean wasFocused;
@@ -26,10 +26,12 @@ public class Vertex implements Comparable {
     public int inDegree;
     public float normalizedDegree;
     public float closeness;
+    public float normalizedCloseness;
     public int betweenness;
     public float normalizedBetweenness;
     public int eigenvectorCentrality;
     public int color = 0;
+    private float centralization;
 
     public Vertex(String name, int x, int y) {
         this.name = name;
@@ -55,6 +57,14 @@ public class Vertex implements Comparable {
     
     public void setCloseness(float closeness) {
     	this.closeness = closeness;
+    }
+    
+    public void setNormalizedCloseness(float normalizedCloseness) {
+    	this.normalizedCloseness = normalizedCloseness;
+    }
+    
+    public void setCentralization(float centralization) {
+    	this.centralization = centralization;
     }
     
     public void setBetweenness(int betweenness) {
@@ -94,6 +104,14 @@ public class Vertex implements Comparable {
     }
     
     public int getCloseness() {
+        return connectedVertices.size();
+    }
+    
+    public int getNormalizedCloseness() {
+        return connectedVertices.size();
+    }
+    
+    public int getCentralization() {
         return connectedVertices.size();
     }
 
@@ -185,6 +203,22 @@ public class Vertex implements Comparable {
         g.fillOval(location.x - size1 / 4, location.y - size1 / 2, size1+degree, size1+degree);
         g.setColor(Color.BLACK);
         g.drawString(Float.toString(closeness), location.x, location.y);
+    }
+    
+    public void drawNormalizedCloseness(Graphics g) {
+        if (wasClicked) {
+            g.setColor(Color.red);
+        } else if (wasFocused) {
+            g.setColor(Color.blue);
+        } else {
+            g.setColor(Color.black);
+        }
+
+        g.fillOval(location.x - size2 / 4, location.y - size2 / 2, size2+degree, size2+degree);
+        g.setColor(Color.PINK);
+        g.fillOval(location.x - size1 / 4, location.y - size1 / 2, size1+degree, size1+degree);
+        g.setColor(Color.BLACK);
+        g.drawString(Float.toString(normalizedCloseness), location.x, location.y);
     }
     
     public void drawBetweenness(Graphics g) {
