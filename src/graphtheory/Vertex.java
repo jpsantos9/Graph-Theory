@@ -103,6 +103,10 @@ public class Vertex implements Comparable {
         return connectedVertices.size();
     }
     
+    public int getVertexDegree() {
+    	return this.degree;
+    }
+
     public int getCloseness() {
         return connectedVertices.size();
     }

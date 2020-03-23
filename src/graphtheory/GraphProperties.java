@@ -688,7 +688,41 @@ public class GraphProperties {
     }
     
    //////// MM 
-    
+    public boolean hasEulerianCircuit (Vector<Vertex> vList, Vector<Edge> eList) {
+    	Vector<Vertex> degrees = getDegree(vList, eList);
+    	int[][] matrix = generateAdjacencyMatrix(vList, eList);
+    	int edges = 0;
+    	int odd = 0;
+    	
+    	
+    	//just in case magbigay si sir ng input na walang edges
+    	for (int i = 0; i < degrees.size(); i++) {
+    		edges = edges + degrees.get(i).getVertexDegree();
+    	}
+    	//System.out.println("edges = " + edges);
+    	if (edges == 0) {
+    		return true;
+    	}
+    	
+    	//check if the graph is disconnected
+    	try {
+    		int[] path = dijkstra(matrix, matrix[0][0]);
+       	} catch (Exception e) {
+       		//System.out.println("Disconnected");
+       		return false;
+       	}
+    	
+    	//check if the degree of all vertices are even
+    	for (int i = 0; i < degrees.size(); i++) {
+    		if (degrees.get(i).getVertexDegree() % 2 != 0) {
+    			odd++;
+    		}
+    	}
+    	
+    	return (odd == 0) ? true : false;   
+    	
+    }
+
     
     
     //---------------------------------------------------------------------//

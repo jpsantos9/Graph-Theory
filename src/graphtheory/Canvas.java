@@ -631,6 +631,12 @@ public class Canvas {
                     g.draw3DRect(0, 0, width / 2, height / 2, true);
                     g.setColor(Color.black);
                     
+                    if (gP.hasEulerianCircuit(vertexList, edgeList) == true) {
+                    	g.drawString("Graph contains an Euler Circuit.", 100, height / 2 + 70);
+                    } else {
+                    	g.drawString("Graph does not contain an Euler Circuit.", 100, height / 2 + 70);
+                    }
+                    
                     vertexList = gP.getColorization(vertexList, edgeList);
                     System.out.println("-------COLORIZATION------");
                     for (Vertex v : vertexList) {
