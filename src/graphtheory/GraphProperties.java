@@ -722,6 +722,44 @@ public class GraphProperties {
     	return (odd == 0) ? true : false;   
     	
     }
+    
+    public boolean hasEulerianTrail (Vector<Vertex> vList, Vector<Edge> eList) {
+    	Vector<Vertex> degrees = getDegree(vList, eList);
+    	int[][] matrix = generateAdjacencyMatrix(vList, eList);
+    	int edges = 0;
+    	int odd = 0;
+    	
+    	for (int i = 0; i < degrees.size(); i++) {
+    		edges = edges + degrees.get(i).getVertexDegree();
+    	}
+    	//System.out.println("edges = " + edges);
+    	if (edges == 0) {
+    		return true;
+    	}
+    	
+    	try {
+    		int[] path = dijkstra(matrix, matrix[0][0]);
+       	} catch (Exception e) {
+       		//System.out.println("Disconnected");
+       		return false;
+       	}
+    	
+    	for (int i = 0; i < degrees.size(); i++) {
+    		if (degrees.get(i).getVertexDegree() % 2 != 0) {
+    			odd++;
+    		}
+    	}
+    	
+    	if (odd == 0) {
+    		return true;
+    	} else if (odd > 2) {
+            return false; 
+    	} else if (odd == 2) {
+    		return true;
+    	} else {
+    		return false;
+    	} 
+    }
 
     
     

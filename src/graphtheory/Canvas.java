@@ -637,6 +637,12 @@ public class Canvas {
                     	g.drawString("Graph does not contain an Euler Circuit.", 100, height / 2 + 70);
                     }
                     
+                    if (gP.hasEulerianTrail(vertexList, edgeList) == true) {
+                    	g.drawString("Graph contains an Euler Trail.", 100, height / 2 + 90);
+                    } else {
+                    	g.drawString("Graph does not contain an Euler Trail.", 100, height / 2 + 90);
+                    }
+                    
                     vertexList = gP.getColorization(vertexList, edgeList);
                     System.out.println("-------COLORIZATION------");
                     for (Vertex v : vertexList) {
