@@ -136,6 +136,10 @@ public class Canvas {
         item.addActionListener(new MenuListener());
         menuOptions4.add(item);
         
+        item = new JMenuItem("Minimum Spanning Tree");
+        item.addActionListener(new MenuListener());
+        menuOptions4.add(item);
+        
 
         menuBar.add(menuOptions1);
         menuBar.add(menuOptions);
@@ -235,6 +239,7 @@ public class Canvas {
                             if (v.hasIntersection(e.getX(), e.getY())) {
                                 v.wasClicked = true;
                                 clickedVertexIndex = vertexList.indexOf(v);
+                                gP.generateMST(vertexList, edgeList);
 //                                gP.getDistance(vertexList, edgeList, clickedVertexIndex, 0);
 //                                gP.printComb(gP.combination(3, 2));
 //                                System.out.println("Fault Distance: " + gP.getFaultDistance(vertexList, edgeList, clickedVertexIndex, 1, 1));
@@ -511,6 +516,9 @@ public class Canvas {
             } else if (command.equals("Normalized Closeness")) {
             	selectedWindow = 11;
             	erase();
+            } else if (command.equals("Minimum Spanning Tree")) {
+            	selectedWindow = 12;
+            	erase();
             }
             
 
@@ -752,6 +760,16 @@ public class Canvas {
                     }
                     
                     break;
+                }
+                case 12: {
+                	Vector<Edge> tree = gP.generateMST(vertexList, edgeList);
+                	for (Edge e : tree) {
+                        e.draw(g);
+                    }
+                    for (Vertex v : vertexList) {
+                        v.draw(g);
+                    }
+                	
                 }
             }
 

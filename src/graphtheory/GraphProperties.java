@@ -761,6 +761,71 @@ public class GraphProperties {
     	} 
     }
 
+    //kruskal
+    public Vector<Edge> generateMST(Vector<Vertex> vList, Vector<Edge> eList) {
+    	//create temporary list
+    	Vector<Edge> tempEList = new Vector<Edge>();
+    	for (Edge e : eList) {
+    		tempEList.add(e);
+    	}
+    	
+    	// sort eList smallest to highest
+    	sort("weight", tempEList);
+    	
+    	// generate the tree
+    	Vector<Edge> tree = new Vector<Edge>();
+    	int i = 0;
+    	Vector<String> vertexAdded = new Vector<>();
+    	while (vList.size()-1>tree.size()) {
+    		tree.add(tempEList.get(i));
+    		addVertex(vertexAdded, tempEList.get(i).vertex1.name);
+    		addVertex(vertexAdded, tempEList.get(i).vertex2.name);
+    		
+    		//check if formed a cycle
+    		if (vertexAdded.size()<=tree.size()) {
+    			tree.remove(tree.size()-1);
+    		}
+    		i++;
+    	}
+    	return tree;
+    }
+    
+    public void sort(final String field, Vector<Edge> itemLocationList) {
+        Collections.sort(itemLocationList, new Comparator<Edge>() {
+            @Override
+            public int compare(Edge o1, Edge o2) {
+            	return Integer.toString(o1.weight).compareTo(Integer.toString(o2.weight));
+            }           
+        });
+    }
+    
+    public void addVertex(Vector<String> list, String x) {
+    	int found = 0;
+    	for (String i : list) {
+    		if (x.equals(i)) {
+    			found++;
+    		}
+    	}
+    	if (found == 0) {
+    		list.add(x);
+    	}
+    }
+    
+    public void removeVertex(Vector<String> list, String x) {
+    	int index = 0;
+    	for (String i : list) {
+    		if (x.equals(i)) {
+    			list.remove(index);
+    		}
+    		index++;
+    	}
+    }
+    
+    public void printEdge(Vector<Edge> eList) {
+    	for (Edge e : eList) {
+    		System.out.println(e.vertex1.name + " : " + e.vertex2.name + " = " + e.weight);
+    	}
+    }
     
     
     //---------------------------------------------------------------------//
