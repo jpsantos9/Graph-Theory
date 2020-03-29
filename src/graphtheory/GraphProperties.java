@@ -760,6 +760,50 @@ public class GraphProperties {
     		return false;
     	} 
     }
+    
+    public boolean hasHamiltonianPath (Vector<Vertex> vList) {
+    	System.out.println("------CHECK FOR HAMILTONIAN PATHS------");
+    	boolean hasHamiltonianPath = false;
+    	VertexPair vp;
+    	for (int a = 0; a < vList.size(); a++) {    // assign vertex pairs
+            for (int b = 0; b < vList.size(); b++) {
+            	if(b != a) {
+	                vp = new VertexPair(vList.get(a), vList.get(b));
+	                vpList.add(vp);
+	                System.out.println(">Vertex Pair " + vList.get(a).name + "-" + vList.get(b).name + "\n All Paths:");
+	                vp.generateVertexDisjointPaths();
+	                for (int i = 0; i < vp.VertexDisjointContainer.size(); i++) {
+	                    int longestLength = vp.VertexDisjointContainer.get(i).firstElement().size();
+	                    if(longestLength == vList.size()) {
+	                    	System.out.println("Length = " + longestLength);
+	                    	//check if all vertices are unique
+	                    	ArrayList<String> list=new ArrayList<String>();
+	                    	list.add(vp.VertexDisjointContainer.get(i).get(0).get(0).name);
+	                    	System.out.print("-" + vp.VertexDisjointContainer.get(i).get(0).get(0).name);
+	                        hasHamiltonianPath = true;
+	                    	for (int k = 1; k < vp.VertexDisjointContainer.get(i).get(0).size(); k++) {
+	                        	if(!(list.contains(vp.VertexDisjointContainer.get(i).get(0).get(k).name))) {
+	                        		list.add(vp.VertexDisjointContainer.get(i).get(0).get(k).name);
+	                        	}
+	                        	else {
+	                        		hasHamiltonianPath = false;
+	                        	}
+	                        }
+	                    	if(hasHamiltonianPath == true) {
+	                    		System.out.println("\nHAMILTONIAN PATH");
+	                    		for (int k = 0; k < vp.VertexDisjointContainer.get(i).get(0).size(); k++) {
+		                        	System.out.print("-" + vp.VertexDisjointContainer.get(i).get(0).get(k).name);
+		                        }
+	                    	}
+	                        System.out.println();
+	                    }
+	                }
+            	}
+            }
+    	}
+        return hasHamiltonianPath;
+    	
+    }
 
     //kruskal
     public Vector<Edge> generateMST(Vector<Vertex> vList, Vector<Edge> eList) {

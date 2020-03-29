@@ -651,6 +651,12 @@ public class Canvas {
                     	g.drawString("Graph does not contain an Euler Trail.", 100, height / 2 + 90);
                     }
                     
+                    if (gP.hasHamiltonianPath(vertexList) == true) {
+                    	g.drawString("Graph contains a Hamiltonian Path.", 100, height / 2 + 110);
+                    } else {
+                    	g.drawString("Graph does not contain a Hamiltonian Path.", 100, height / 2 + 110);
+                    }
+                    
                     vertexList = gP.getColorization(vertexList, edgeList);
                     System.out.println("-------COLORIZATION------");
                     for (Vertex v : vertexList) {
