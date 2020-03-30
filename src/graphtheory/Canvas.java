@@ -140,6 +140,10 @@ public class Canvas {
         item.addActionListener(new MenuListener());
         menuOptions4.add(item);
         
+        item = new JMenuItem("Minimum Vertex Cover");
+        item.addActionListener(new MenuListener());
+        menuOptions4.add(item);
+        
 
         menuBar.add(menuOptions1);
         menuBar.add(menuOptions);
@@ -239,7 +243,11 @@ public class Canvas {
                             if (v.hasIntersection(e.getX(), e.getY())) {
                                 v.wasClicked = true;
                                 clickedVertexIndex = vertexList.indexOf(v);
-                                gP.generateMST(vertexList, edgeList);
+//                                Vector<String> temp = new Vector<String>();
+//                                temp.add(vertexList.get(clickedVertexIndex).name);
+//                                System.out.println("vertex cover: " + gP.isVertexCover(temp, edgeList, vertexList));
+//                                System.out.println("MVC: " + gP.getMinimumVertexCover(edgeList, vertexList));
+//                                gP.generateMST(vertexList, edgeList);
 //                                gP.getDistance(vertexList, edgeList, clickedVertexIndex, 0);
 //                                gP.printComb(gP.combination(3, 2));
 //                                System.out.println("Fault Distance: " + gP.getFaultDistance(vertexList, edgeList, clickedVertexIndex, 1, 1));
@@ -519,6 +527,9 @@ public class Canvas {
             } else if (command.equals("Minimum Spanning Tree")) {
             	selectedWindow = 12;
             	erase();
+            } else if (command.equals("Minimum Vertex Cover")) {
+            	selectedWindow = 13;
+            	erase();
             }
             
 
@@ -740,7 +751,7 @@ public class Canvas {
                         e.draw(g);
                     }
                     for (Vertex v : vertexList) {
-                        v.drawInDegree(g);;
+                        v.drawInDegree(g);
                     }
                     
                     break;
@@ -775,7 +786,20 @@ public class Canvas {
                     for (Vertex v : vertexList) {
                         v.draw(g);
                     }
+                    
+                    break;
                 	
+                }
+                case 13: {
+                	vertexList = gP.generateMinimumVertexCover(edgeList, vertexList);
+                	for (Edge e : edgeList) {
+                        e.draw(g);
+                    }
+                	for (Vertex v : vertexList) {
+                        v.drawVertexCover(g);;
+                    }
+                	
+                	break;
                 }
             }
 

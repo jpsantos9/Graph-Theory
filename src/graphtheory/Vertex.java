@@ -32,6 +32,7 @@ public class Vertex implements Comparable {
     public int eigenvectorCentrality;
     public int color = 0;
     private float centralization;
+    public boolean isVertexCover;
 
     public Vertex(String name, int x, int y) {
         this.name = name;
@@ -80,6 +81,10 @@ public class Vertex implements Comparable {
     
     public void setColor(int color) {
     	this.color = color;
+    }
+    
+    public void setVertexCover(boolean bool) {
+    	this.isVertexCover = bool;
     }
 
     public boolean hasIntersection(int x, int y) {
@@ -289,7 +294,28 @@ public class Vertex implements Comparable {
         g.setColor(Color.BLACK);
         g.drawString(Integer.toString(color), location.x, location.y);
     }
+    
     public int getEigenvector() {
         return connectedVertices.size();
+    }
+    
+    public void drawVertexCover(Graphics g) {
+    	if (wasClicked) {
+            g.setColor(Color.red);
+        } else if (wasFocused) {
+            g.setColor(Color.blue);
+        } else {
+            g.setColor(Color.black);
+        }
+
+        g.fillOval(location.x - size2 / 2, location.y - size2 / 2, size2, size2);
+        if (isVertexCover) {
+        	g.setColor(Color.PINK);
+        } else {
+        	g.setColor(Color.WHITE);
+        }
+        g.fillOval(location.x - size1 / 2, location.y - size1 / 2, size1, size1);
+        g.setColor(Color.BLACK);
+        g.drawString(name, location.x, location.y);
     }
 }

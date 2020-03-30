@@ -871,6 +871,68 @@ public class GraphProperties {
     	}
     }
     
+    //minimum vertex cover (brute force)
+    public boolean isVertexCover (Vector<String> subset, Vector<Edge> eList, Vector<Vertex> vList) {
+    	Vector<String> coveredList = new Vector<String>();
+    	for (String v : subset) {
+    		for (Edge e : eList) {
+    			if (e.vertex1.name.equals(v) || e.vertex2.name.equals(v)) {
+    				addVertex(coveredList, e.vertex1.name);
+    				addVertex(coveredList, e.vertex2.name);
+    			}
+    		}
+    	}
+    	if (coveredList.size() == vList.size()) {
+    		return true;
+    	} else {
+    		return false;
+    	}
+    }
+    
+    public Vector<String> getMinimumVertexCover (Vector<Edge> eList, Vector<Vertex> vList) {
+    	//from 1 to N subsets
+    	for (int i = 1; i<=vList.size(); i++) {
+    		List<int[]> subsetList = new ArrayList<>();
+    		subsetList = combination(vList.size(), i);
+    		for (int[] subset : subsetList) {
+    			Vector<String> temp = new Vector<String>();
+    			temp = arrayToVector(subset);
+    			if (isVertexCover(temp, eList, vList)) {
+    				return temp;
+    			}
+    		}
+    	}
+    	return null;
+    }
+    
+    public Vector<Vertex> generateMinimumVertexCover (Vector<Edge> eList, Vector<Vertex> vList) {
+    	Vector<String> mvc = new Vector<String>();
+    	mvc = getMinimumVertexCover(eList, vList);
+    	int counter = 0;
+    	for (Vertex v : vList) {
+    		counter = 0;
+    		for (String w : mvc) {
+    			if (v.name.equals(w)) {
+    				counter = 1;
+//    				v.setVertexCover(true);
+    			}
+    		}
+    		if (counter == 1) {
+    			v.setVertexCover(true);
+    		} else {
+    			v.setVertexCover(false);
+    		}
+    	}
+    	return vList;
+    }
+    
+    public Vector<String> arrayToVector (int[] array) {
+    	Vector<String> temp = new Vector<String>();
+    	for (int i = 0; i<array.length; i++) {
+    		temp.add(Integer.toString(array[i]));
+    	}
+    	return temp;
+    }
     
     //---------------------------------------------------------------------//
 
