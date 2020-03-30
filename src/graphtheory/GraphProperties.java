@@ -6,21 +6,32 @@ package graphtheory;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JTextField;
+
 /**
  *
  * @author mk
  */
-public class GraphProperties {
+public class GraphProperties implements ActionListener{
 
     public int[][] adjacencyMatrix;
     public int[][] distanceMatrix;
     public Vector<VertexPair> vpList;
+    
+    private JTextField tf1;
+    private JButton b1;
+    private JFrame f;
+    public int w;
 
     public int[][] generateAdjacencyMatrix(Vector<Vertex> vList, Vector<Edge> eList) {
         adjacencyMatrix = new int[vList.size()][vList.size()];
@@ -564,7 +575,7 @@ public class GraphProperties {
     	 }
      }
      
-     public int getFaultDistance(Vector<Vertex> vList, Vector<Edge> eList, int start, int end, int w) {
+     public int getFaultDistance(Vector<Vertex> vList, Vector<Edge> eList, int start, int end) {
     	 int[][] matrix = generateAdjacencyMatrix(vList, eList);
     	 int[] includedVertex = new int[vList.size()-w];
     	 int maxDistance = 0;
@@ -643,6 +654,19 @@ public class GraphProperties {
     	return density;
     }
     
+    public int getFaultToleranceDiameter (Vector<Vertex> vList, Vector<Edge> eList) {
+//    	max fault distance of a graph given w
+    	int faultToleranceDiameter = 0;
+    	for(int i = 0; i < vList.size(); i++) {
+    		for (int j = 0; j < vList.size(); j++) {
+    			if (faultToleranceDiameter < getFaultDistance(vList, eList, i, j)) {
+    				faultToleranceDiameter = getFaultDistance(vList, eList, i, j);
+    			}
+    		}
+    	}
+    	return faultToleranceDiameter;
+    }
+    
     public int getDiameter (int[][] matrix) {
     	int diameter = 0;
     	int rowLen = matrix.length;
@@ -659,8 +683,9 @@ public class GraphProperties {
     	
     	return diameter;
     }
+    
 
-    public int getFaultDiameter (Vector<Vertex> vList, Vector<Edge> eList, int w) {
+    public int getFaultDiameter (Vector<Vertex> vList, Vector<Edge> eList) {
     	int faultDiameter = 0;
     	int[][] matrix = generateAdjacencyMatrix(vList, eList);
     	Vector<Vertex> tempVlist = new Vector<Vertex>();
@@ -933,6 +958,35 @@ public class GraphProperties {
     	}
     	return temp;
     }
+    
+    public void askWeight() {
+    	f= new JFrame("Input w"); 
+    	tf1 = new JTextField();  
+        tf1.setBounds(75,5,150,20);
+        b1=new JButton("enter");  
+        b1.setBounds(100,30,100,30); 
+        b1.addActionListener(this);  
+        f.add(tf1);
+        f.add(b1);
+        f.setSize(300,150);
+        f.setLayout(null);
+        f.setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent e) {  
+        String s1=tf1.getText();   
+        int a=Integer.parseInt(s1);    
+        if(e.getSource()==b1){  
+            w = a;
+        } else {
+        	w = 0;
+        }
+        f.dispose();
+    }  
+    
+    
+    
+    
     
     //---------------------------------------------------------------------//
 
