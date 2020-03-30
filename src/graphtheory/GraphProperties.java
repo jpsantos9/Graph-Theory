@@ -959,7 +959,7 @@ public class GraphProperties implements ActionListener{
     	return temp;
     }
     
-    public void askWeight() {
+    public void askW() {
     	f= new JFrame("Input w"); 
     	tf1 = new JTextField();  
         tf1.setBounds(75,5,150,20);

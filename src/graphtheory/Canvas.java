@@ -62,6 +62,7 @@ public class Canvas {
         JMenu menuOptions2 = new JMenu("Extras");
         JMenu menuOptions3 = new JMenu("Window");
         JMenu menuOptions4 = new JMenu("Centrality");
+        JMenu menuOptions5 = new JMenu("Fault Values");
 
         JMenuItem item = new JMenuItem("Add Vertex");
         item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_DOWN_MASK));
@@ -144,13 +145,24 @@ public class Canvas {
         item.addActionListener(new MenuListener());
         menuOptions4.add(item);
         
+        
+        item = new JMenuItem("Fault Distance");
+        item.addActionListener(new MenuListener());
+        menuOptions5.add(item);
+        item = new JMenuItem("Fault Tolerance Diameter");
+        item.addActionListener(new MenuListener());
+        menuOptions5.add(item);
+        item = new JMenuItem("Fault Diameter");
+        item.addActionListener(new MenuListener());
+        menuOptions5.add(item);
 
         menuBar.add(menuOptions1);
         menuBar.add(menuOptions);
         menuBar.add(menuOptions2);
         menuBar.add(menuOptions3);
         menuBar.add(menuOptions4);
-
+        menuBar.add(menuOptions5);
+        
         frame.setJMenuBar(menuBar);
 
         backgroundColour = bgColour;
@@ -272,7 +284,7 @@ public class Canvas {
                             if (v.hasIntersection(e.getX(), e.getY())) {
                                 v.wasClicked = true;
                                 clickedVertexIndex = vertexList.indexOf(v);
-                                System.out.println(vertexList.get(clickedVertexIndex).getCloseness()); //print closeness to console
+//                                System.out.println(vertexList.get(clickedVertexIndex).getCloseness()); //print closeness to console
                             } else {
                                 v.wasClicked = false;
                             }
@@ -494,6 +506,8 @@ public class Canvas {
 
                     //VD paths
                     gP.displayContainers(vertexList);
+                    
+                 
                 //gP.drawNWideDiameter();
                 }
                 erase();
@@ -529,6 +543,15 @@ public class Canvas {
             	erase();
             } else if (command.equals("Minimum Vertex Cover")) {
             	selectedWindow = 13;
+            	erase();
+            } else if (command.equals("Fault Distance")) {
+            	selectedWindow = 14;
+            	erase();
+            } else if (command.equals("Fault Tolerance Diameter")) {
+            	selectedWindow = 15;
+            	erase();
+            }else if (command.equals("Fault Diameter")) {
+            	selectedWindow = 16;
             	erase();
             }
             
@@ -673,6 +696,12 @@ public class Canvas {
                     for (Vertex v : vertexList) {
                     	System.out.println(v.name + " : " + v.color);
                     }
+                    
+                    
+//                    g.drawString("Fault Distance : " + gP.getFaultDistance(vertexList, edgeList, start, end), 100, height / 2 + 130);
+                    g.drawString("Fault Tolerance Diameter : " + gP.getFaultToleranceDiameter(vertexList, edgeList), 100, height / 2 + 150);
+                    g.drawString("Fault Diameter : " + gP.getFaultDiameter(vertexList, edgeList), 100, height / 2 + 130);
+                    
                     break;
                 }
                 case 3: {				//print the vertex as degree
@@ -802,7 +831,6 @@ public class Canvas {
                 	break;
                 }
             }
-
         }
     }
 }
