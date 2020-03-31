@@ -690,6 +690,16 @@ public class Canvas {
                     	g.drawString("Graph does not contain a Hamiltonian Path.", 100, height / 2 + 110);
                     }
                     
+                    int[][] matrix = gP.generateAdjacencyMatrix(vertexList, edgeList);
+                    int diameter = gP.getDiameter(matrix);
+                    if (diameter == -1) {
+                    	g.drawString("Diameter: " + diameter, 100, height / 2 + 130);
+                    	g.drawString("(The graph is disconnected.)", 100, height / 2 + 150);
+                    } else {
+                    	g.drawString("Diameter: " + diameter, 100, height / 2 + 130);
+                    }
+                    
+                    
                     vertexList = gP.getColorization(vertexList, edgeList);
                     System.out.println("-------COLORIZATION------");
                     for (Vertex v : vertexList) {

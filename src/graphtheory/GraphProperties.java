@@ -498,6 +498,9 @@ public class GraphProperties {// implements ActionListener{
         	 
         	 System.out.println("Shortest Distance from " + start + "-" + end);
         	 while (nextIndex != -1) {
+        		 if(prevIndex == nextIndex) {
+ 	       			return -1;
+ 	       		}
 //        		 for (Edge e : eList) {
 //        			 //System.out.println(e.vertex1.name + " : " + Integer.parseInt(e.vertex2.name));
 //        			 if ((Integer.parseInt(e.vertex1.name) == prevIndex && Integer.parseInt(e.vertex2.name) == nextIndex) || (Integer.parseInt(e.vertex1.name) == nextIndex && Integer.parseInt(e.vertex2.name) == prevIndex)) {
@@ -529,6 +532,9 @@ public class GraphProperties {// implements ActionListener{
 	       	 
 	       	 System.out.println("Shortest Distance from " + start + "-" + end);
 	       	 while (nextIndex != -1) {
+	       		if(prevIndex == nextIndex) {
+	       			return -1;
+	       		}
 	       		 System.out.println(prevIndex + " : " + nextIndex);
 	       		 distance += matrix[prevIndex][nextIndex];
 	       		 prevIndex = nextIndex;
@@ -651,6 +657,7 @@ public class GraphProperties {// implements ActionListener{
     			}
     		}
     	}
+    	System.out.println("faultDistance: " + faultToleranceDiameter);
     	return faultToleranceDiameter;
     }
     
@@ -658,10 +665,16 @@ public class GraphProperties {// implements ActionListener{
     	int diameter = 0;
     	int rowLen = matrix.length;
     	int colLen = matrix[0].length;
-    	//(i,j) will be your vertex pair
+    	int currDistance;
+    	
+    	
     	for (int i = 0; i < rowLen; i++) {
     		for (int j = 0; j < colLen; j++) {
-    			int currDistance = getDistance(matrix, i, j);
+
+    				
+				System.out.println("distance(" + i + "," + j + ") ");
+				currDistance = getDistance(matrix, i, j);
+
     			if (currDistance == -1 ) {						//disconnected ang graph
     				return -1;
     			}
@@ -669,9 +682,8 @@ public class GraphProperties {// implements ActionListener{
     				diameter = currDistance;
     			}
     		}
-    		
     	}
-    	System.out.println("diameter : " + diameter);
+    	
     	return diameter;
     }
     
@@ -681,21 +693,31 @@ public class GraphProperties {// implements ActionListener{
     	int faultDiameter = 0;
     	int[][] matrix = generateAdjacencyMatrix(vList, eList);
     	
-    	
-    	for (int p = w; p <= 0; p--) {
-    		List<int[]> includedList = combination(vList.size(), vList.size()-p);
-         	 
+    	System.out.println("-----------------------FAULT DIAMETER-----------------------");
+    	System.out.println("value of w: " + w);
+    	for (int p = w; p >= 0; p--) {
+    		List<int[]> includedList = combination(vList.size(), vList.size()-p); 		
        	 	for (int[] elem : includedList) {
-       	 		//check if connected ang graph
+       	
+       	 		System.out.println("Elem: ");
+       	 		for(int content: elem) {
+       	 			System.out.print(content);
+       	 		}System.out.println();
        	 		
      			int[][] tempMatrix = new int[vList.size()-p][vList.size()-p];	//G-S
-     			System.out.println("length: " + elem.length);
      			for (int i=0; i<elem.length; i++) {
      				for (int j=0; j<elem.length; j++) {
      					tempMatrix[i][j] = matrix[elem[i]][elem[j]];
      				}
-    	 		}
+     			}
+//     			System.out.println("Matrix " + p);
+//     			printMatrix(tempMatrix);
+
+//
+//
      			currDiameter = getDiameter(tempMatrix);
+//     			System.out.println("Diameter: " + currDiameter);
+//     			System.out.println();
      			if (faultDiameter < currDiameter) {
      				faultDiameter = currDiameter;
      			}
@@ -704,6 +726,7 @@ public class GraphProperties {// implements ActionListener{
     	
     	return faultDiameter;
     }
+    
     
    //////// MM 
     public boolean hasEulerianCircuit (Vector<Vertex> vList, Vector<Edge> eList) {
