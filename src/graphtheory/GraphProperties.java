@@ -657,7 +657,7 @@ public class GraphProperties {// implements ActionListener{
     			}
     		}
     	}
-    	System.out.println("faultDistance: " + faultToleranceDiameter);
+//    	System.out.println("faultDistance: " + faultToleranceDiameter);
     	return faultToleranceDiameter;
     }
     
@@ -667,14 +667,9 @@ public class GraphProperties {// implements ActionListener{
     	int colLen = matrix[0].length;
     	int currDistance;
     	
-    	
     	for (int i = 0; i < rowLen; i++) {
     		for (int j = 0; j < colLen; j++) {
-
-    				
-				System.out.println("distance(" + i + "," + j + ") ");
 				currDistance = getDistance(matrix, i, j);
-
     			if (currDistance == -1 ) {						//disconnected ang graph
     				return -1;
     			}
@@ -693,8 +688,6 @@ public class GraphProperties {// implements ActionListener{
     	int faultDiameter = 0;
     	int[][] matrix = generateAdjacencyMatrix(vList, eList);
     	
-    	System.out.println("-----------------------FAULT DIAMETER-----------------------");
-    	System.out.println("value of w: " + w);
     	for (int p = w; p >= 0; p--) {
     		List<int[]> includedList = combination(vList.size(), vList.size()-p); 		
        	 	for (int[] elem : includedList) {
@@ -712,12 +705,10 @@ public class GraphProperties {// implements ActionListener{
      			}
 //     			System.out.println("Matrix " + p);
 //     			printMatrix(tempMatrix);
-
-//
-//
-     			currDiameter = getDiameter(tempMatrix);
 //     			System.out.println("Diameter: " + currDiameter);
 //     			System.out.println();
+
+     			currDiameter = getDiameter(tempMatrix);
      			if (faultDiameter < currDiameter) {
      				faultDiameter = currDiameter;
      			}
