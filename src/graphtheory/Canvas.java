@@ -507,7 +507,6 @@ public class Canvas {
                     //VD paths
                     gP.displayContainers(vertexList);
                     
-                 
                 //gP.drawNWideDiameter();
                 }
                 erase();
@@ -698,10 +697,6 @@ public class Canvas {
                     }
                     
                     
-//                    g.drawString("Fault Distance : " + gP.getFaultDistance(vertexList, edgeList, start, end), 100, height / 2 + 130);
-                    g.drawString("Fault Tolerance Diameter : " + gP.getFaultToleranceDiameter(vertexList, edgeList), 100, height / 2 + 150);
-                    g.drawString("Fault Diameter : " + gP.getFaultDiameter(vertexList, edgeList), 100, height / 2 + 130);
-                    
                     break;
                 }
                 case 3: {				//print the vertex as degree
@@ -828,6 +823,42 @@ public class Canvas {
                         v.drawVertexCover(g);;
                     }
                 	
+                	break;
+                }
+                case 14: { 	//displaying fault distance
+                	
+                	for (Edge e : edgeList) {
+                        e.draw(g);
+                    }
+                    for (Vertex v : vertexList) {
+                        v.drawDegree(g);
+                    }
+                    g.drawString("Fault Distance : " + gP.displayFaultDistance(vertexList, edgeList), 100, height / 2 + 110);
+//                	
+                	break;
+                }
+                case 15: { 	//displaying fault tolerance diameter
+                	
+                	for (Edge e : edgeList) {
+                        e.draw(g);
+                    }
+                    for (Vertex v : vertexList) {
+                        v.drawDegree(g);
+                    }
+                    g.drawString("Fault Tolerance Diameter : " + gP.displayFaultToleranceDiameter(vertexList, edgeList), 100, height / 2 + 110);
+                    
+                	break;
+                }
+                case 16: { 	//displaying fault diameter
+                	
+                	for (Edge e : edgeList) {
+                        e.draw(g);
+                    }
+                    for (Vertex v : vertexList) {
+                        v.drawDegree(g);
+                    }
+                    g.drawString("Fault Diameter : " + gP.displayFaultDiameter(vertexList, edgeList), 100, height / 2 + 110);
+                    
                 	break;
                 }
             }

@@ -17,12 +17,13 @@ import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author mk
  */
-public class GraphProperties implements ActionListener{
+public class GraphProperties {// implements ActionListener{
 
     public int[][] adjacencyMatrix;
     public int[][] distanceMatrix;
@@ -31,8 +32,9 @@ public class GraphProperties implements ActionListener{
     private JTextField tf1;
     private JButton b1;
     private JFrame f;
-    public int w;
 
+//    public int w, start, end;
+    
     public int[][] generateAdjacencyMatrix(Vector<Vertex> vList, Vector<Edge> eList) {
         adjacencyMatrix = new int[vList.size()][vList.size()];
 
@@ -575,13 +577,14 @@ public class GraphProperties implements ActionListener{
     	 }
      }
      
-     public int getFaultDistance(Vector<Vertex> vList, Vector<Edge> eList, int start, int end) {
+     public int getFaultDistance(Vector<Vertex> vList, Vector<Edge> eList, int start, int end, int w) {
+    	 w = w-1;
     	 int[][] matrix = generateAdjacencyMatrix(vList, eList);
-    	 int[] includedVertex = new int[vList.size()-w];
+//    	 int[] includedVertex = new int[vList.size()-w];
     	 int maxDistance = 0;
-    	 includedVertex[0]=2;
-    	 includedVertex[1]=1;
-    	 includedVertex[2]=3;
+//    	 includedVertex[0]=2;
+//    	 includedVertex[1]=1;
+//    	 includedVertex[2]=3;
     	 
     	 // generate the combination of vertices 
     	 List<int[]> includedList = combination(vList.size(), vList.size()-w);
@@ -623,6 +626,7 @@ public class GraphProperties implements ActionListener{
 //    	 printMatrix(tempMatrix);
 //    	 
 //    	 getDistance(tempMatrix, start, end);
+    	 
     	 return maxDistance;
      }
      
@@ -654,13 +658,13 @@ public class GraphProperties implements ActionListener{
     	return density;
     }
     
-    public int getFaultToleranceDiameter (Vector<Vertex> vList, Vector<Edge> eList) {
+    public int getFaultToleranceDiameter (Vector<Vertex> vList, Vector<Edge> eList, int w) {
 //    	max fault distance of a graph given w
     	int faultToleranceDiameter = 0;
     	for(int i = 0; i < vList.size(); i++) {
     		for (int j = 0; j < vList.size(); j++) {
-    			if (faultToleranceDiameter < getFaultDistance(vList, eList, i, j)) {
-    				faultToleranceDiameter = getFaultDistance(vList, eList, i, j);
+    			if (faultToleranceDiameter < getFaultDistance(vList, eList, i, j, w)) {
+    				faultToleranceDiameter = getFaultDistance(vList, eList, i, j, w);
     			}
     		}
     	}
@@ -675,21 +679,26 @@ public class GraphProperties implements ActionListener{
     	for (int i = 0; i < rowLen; i++) {
     		for (int j = 0; j < colLen; j++) {
     			int currDistance = getDistance(matrix, i, j);
-    			if ( currDistance > diameter) {
+    			if (currDistance == -1 ) {						//disconnected ang graph
+    				return -1;
+    			}
+    			else if ( currDistance > diameter) {
     				diameter = currDistance;
     			}
     		}
+    		
     	}
-    	
+    	System.out.println("diameter : " + diameter);
     	return diameter;
     }
     
 
-    public int getFaultDiameter (Vector<Vertex> vList, Vector<Edge> eList) {
+    public int getFaultDiameter (Vector<Vertex> vList, Vector<Edge> eList, int w) {
+    	int currDiameter = 0;
     	int faultDiameter = 0;
     	int[][] matrix = generateAdjacencyMatrix(vList, eList);
-    	Vector<Vertex> tempVlist = new Vector<Vertex>();
-    	Vector<Edge> tempElist = new Vector<Edge>();
+    	
+    	int count = 0;
     	
     	List<int[]> includedList = combination(vList.size(), vList.size()-w);
       	 
@@ -703,11 +712,13 @@ public class GraphProperties implements ActionListener{
  					tempMatrix[i][j] = matrix[elem[i]][elem[j]];
  				}
 	 		}
- 			if (faultDiameter < getDiameter(tempMatrix)) {
- 				faultDiameter = getDiameter(tempMatrix);
+ 			count++;
+ 			System.out.println("Graph " + count);
+ 			currDiameter = getDiameter(tempMatrix);
+ 			if (faultDiameter < currDiameter) {
+ 				faultDiameter = currDiameter;
  			}
    	 	}
-   	 	
     	
     	return faultDiameter;
     }
@@ -719,9 +730,7 @@ public class GraphProperties implements ActionListener{
     	int edges = 0;
     	int odd = 0;
     	
-    	
-    	//just in case magbigay si sir ng input na walang edges
-    	for (int i = 0; i < degrees.size(); i++) {
+    	for (int i = 0; i < degrees.size(); i++) {				//just in case magbigay si sir ng input na walang edges
     		edges = edges + degrees.get(i).getVertexDegree();
     	}
     	//System.out.println("edges = " + edges);
@@ -729,16 +738,16 @@ public class GraphProperties implements ActionListener{
     		return true;
     	}
     	
-    	//check if the graph is disconnected
-    	try {
+    			
+    	try {													//check if the graph is disconnected
     		int[] path = dijkstra(matrix, matrix[0][0]);
        	} catch (Exception e) {
        		//System.out.println("Disconnected");
        		return false;
        	}
     	
-    	//check if the degree of all vertices are even
-    	for (int i = 0; i < degrees.size(); i++) {
+    	
+    	for (int i = 0; i < degrees.size(); i++) {				//check if the degree of all vertices are even
     		if (degrees.get(i).getVertexDegree() % 2 != 0) {
     			odd++;
     		}
@@ -959,33 +968,48 @@ public class GraphProperties implements ActionListener{
     	return temp;
     }
     
-    public void askW() {
-    	f= new JFrame("Input w"); 
-    	tf1 = new JTextField();  
-        tf1.setBounds(75,5,150,20);
-        b1=new JButton("enter");  
-        b1.setBounds(100,30,100,30); 
-        b1.addActionListener(this);  
-        f.add(tf1);
-        f.add(b1);
-        f.setSize(300,150);
-        f.setLayout(null);
-        f.setVisible(true);
+    public int askW() {
+    	int w;
+    	String str1 = JOptionPane.showInputDialog("Enter value for w");
+    	w = Integer.parseInt(str1);
+    	return w;
+    }
+    
+    public int askInput(String str) {	//ask user for vertex
+    	int output;
+    	String str1 = JOptionPane.showInputDialog("Enter value for " + str + ": ");
+    	output = Integer.parseInt(str1);
+    	return output;
+    }
+    
+    public int displayFaultDistance(Vector<Vertex> vList, Vector<Edge> eList) {
+    	int output, start, end, w;
+    	w = askW();
+    	System.out.println("Value of W: " + w);
+    	start = askInput("starting vertex");
+    	System.out.println("Value of X: " + start);
+    	end = askInput("ending vertex");
+    	System.out.println("Value of Y: " + end);
+    	output = getFaultDistance(vList, eList, start, end, w);
+    	
+    	return output;
+    }
+    
+    public int displayFaultToleranceDiameter(Vector<Vertex> vList, Vector<Edge> eList) {
+    	int output, w;
+    	w = askW();
+    	output = getFaultToleranceDiameter(vList, eList, w);
+    	return output;
+    }
+    
+    public int displayFaultDiameter(Vector<Vertex> vList, Vector<Edge> eList) {
+    	int output, w;
+    	w = askW();
+    	output = getFaultDiameter(vList, eList, w);
+    	return output;
     }
 
-    public void actionPerformed(ActionEvent e) {  
-        String s1=tf1.getText();   
-        int a=Integer.parseInt(s1);    
-        if(e.getSource()==b1){  
-            w = a;
-        } else {
-        	w = 0;
-        }
-        f.dispose();
-    }  
-    
-    
-    
+
     
     
     //---------------------------------------------------------------------//
