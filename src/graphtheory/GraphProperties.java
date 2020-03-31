@@ -580,52 +580,35 @@ public class GraphProperties {// implements ActionListener{
      public int getFaultDistance(Vector<Vertex> vList, Vector<Edge> eList, int start, int end, int w) {
     	 w = w-1;
     	 int[][] matrix = generateAdjacencyMatrix(vList, eList);
-//    	 int[] includedVertex = new int[vList.size()-w];
     	 int maxDistance = 0;
-//    	 includedVertex[0]=2;
-//    	 includedVertex[1]=1;
-//    	 includedVertex[2]=3;
     	 
-    	 // generate the combination of vertices 
-    	 List<int[]> includedList = combination(vList.size(), vList.size()-w);
-    	 
-    	 for (int[] elem : includedList) {
-    		 int newEnd=0;
-    		 int newStart=0;
-    		 if (ifInclude(elem, start) && ifInclude(elem, end)) {
-    			 int[][] tempMatrix = new int[vList.size()-w][vList.size()-w];
-            	 System.out.println("length: " + elem.length);
-            	 for (int i=0; i<elem.length; i++) {
-            		 if (end == elem[i]) {
-            			 newEnd = i;
-            		 }
-            		 if (start == elem[i]) {
-            			 newStart = i;
-            		 }
-            		 for (int j=0; j<elem.length; j++) {
-            			 tempMatrix[i][j] = matrix[elem[i]][elem[j]];
-            		 }
-            	 }
-            	 if (maxDistance<getDistance(tempMatrix, newStart, newEnd)) {
-            		 maxDistance = getDistance(tempMatrix, newStart, newEnd);
-            	 }
-    		 }
+    	 for(int p = w; p >= 0; p--) {
+    		 List<int[]> includedList = combination(vList.size(), vList.size()-p);
+        	 
+        	 for (int[] elem : includedList) {
+        		 int newEnd=0;
+        		 int newStart=0;
+        		 if (ifInclude(elem, start) && ifInclude(elem, end)) {
+        			 int[][] tempMatrix = new int[vList.size()-p][vList.size()-p];
+                	 System.out.println("length: " + elem.length);
+                	 for (int i=0; i<elem.length; i++) {
+                		 if (end == elem[i]) {
+                			 newEnd = i;
+                		 }
+                		 if (start == elem[i]) {
+                			 newStart = i;
+                		 }
+                		 for (int j=0; j<elem.length; j++) {
+                			 tempMatrix[i][j] = matrix[elem[i]][elem[j]];
+                		 }
+                	 }
+                	 if (maxDistance<getDistance(tempMatrix, newStart, newEnd)) {
+                		 maxDistance = getDistance(tempMatrix, newStart, newEnd);
+                	 }
+        		 }
+        	 }
     	 }
     	 
-    	 
-//    	 int[][] tempMatrix = new int[vList.size()-w][vList.size()-w];
-//    	 System.out.println("length: " + includedVertex.length);
-//    	 for (int i=0; i<includedVertex.length; i++) {
-//    		 if (end == includedVertex[i]) {
-//    			 end = i;
-//    		 }
-//    		 for (int j=0; j<includedVertex.length; j++) {
-//    			 tempMatrix[i][j] = matrix[includedVertex[i]][includedVertex[j]];
-//    		 }
-//    	 }
-//    	 printMatrix(tempMatrix);
-//    	 
-//    	 getDistance(tempMatrix, start, end);
     	 
     	 return maxDistance;
      }
@@ -698,27 +681,26 @@ public class GraphProperties {// implements ActionListener{
     	int faultDiameter = 0;
     	int[][] matrix = generateAdjacencyMatrix(vList, eList);
     	
-    	int count = 0;
     	
-    	List<int[]> includedList = combination(vList.size(), vList.size()-w);
-      	 
-   	 	for (int[] elem : includedList) {
-   	 		//check if connected ang graph
-   	 		
- 			int[][] tempMatrix = new int[vList.size()-w][vList.size()-w];	//G-S
- 			System.out.println("length: " + elem.length);
- 			for (int i=0; i<elem.length; i++) {
- 				for (int j=0; j<elem.length; j++) {
- 					tempMatrix[i][j] = matrix[elem[i]][elem[j]];
- 				}
-	 		}
- 			count++;
- 			System.out.println("Graph " + count);
- 			currDiameter = getDiameter(tempMatrix);
- 			if (faultDiameter < currDiameter) {
- 				faultDiameter = currDiameter;
- 			}
-   	 	}
+    	for (int p = w; p <= 0; p--) {
+    		List<int[]> includedList = combination(vList.size(), vList.size()-p);
+         	 
+       	 	for (int[] elem : includedList) {
+       	 		//check if connected ang graph
+       	 		
+     			int[][] tempMatrix = new int[vList.size()-p][vList.size()-p];	//G-S
+     			System.out.println("length: " + elem.length);
+     			for (int i=0; i<elem.length; i++) {
+     				for (int j=0; j<elem.length; j++) {
+     					tempMatrix[i][j] = matrix[elem[i]][elem[j]];
+     				}
+    	 		}
+     			currDiameter = getDiameter(tempMatrix);
+     			if (faultDiameter < currDiameter) {
+     				faultDiameter = currDiameter;
+     			}
+       	 	}
+    	}
     	
     	return faultDiameter;
     }
