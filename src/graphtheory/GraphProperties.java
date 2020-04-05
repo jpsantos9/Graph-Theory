@@ -902,16 +902,20 @@ public class GraphProperties {// implements ActionListener{
     }
     
     //minimum vertex cover (brute force)
+    //this function returns if a subset of vertex is a vertexcover
     public boolean isVertexCover (Vector<String> subset, Vector<Edge> eList, Vector<Vertex> vList) {
     	Vector<String> coveredList = new Vector<String>();
     	for (String v : subset) {
     		for (Edge e : eList) {
+    			//check if the vertex in subset connected to an edge
     			if (e.vertex1.name.equals(v) || e.vertex2.name.equals(v)) {
+    				//save all adjacent vertex
     				addVertex(coveredList, e.vertex1.name);
     				addVertex(coveredList, e.vertex2.name);
     			}
     		}
     	}
+    	// if all vertex are there return true
     	if (coveredList.size() == vList.size()) {
     		return true;
     	} else {
@@ -919,14 +923,18 @@ public class GraphProperties {// implements ActionListener{
     	}
     }
     
+    //get the minimum vertex cover
     public Vector<String> getMinimumVertexCover (Vector<Edge> eList, Vector<Vertex> vList) {
     	//from 1 to N subsets
     	for (int i = 1; i<=vList.size(); i++) {
     		List<int[]> subsetList = new ArrayList<>();
+    		//get all subset of size i
     		subsetList = combination(vList.size(), i);
+    		//check for all subset if is vertex cover 
     		for (int[] subset : subsetList) {
     			Vector<String> temp = new Vector<String>();
     			temp = arrayToVector(subset);
+    			//return the first vertex cover found
     			if (isVertexCover(temp, eList, vList)) {
     				return temp;
     			}
@@ -935,12 +943,15 @@ public class GraphProperties {// implements ActionListener{
     	return null;
     }
     
+    //save in the Vertex class if the vertex is part of the vertex cover
     public Vector<Vertex> generateMinimumVertexCover (Vector<Edge> eList, Vector<Vertex> vList) {
+    	
     	Vector<String> mvc = new Vector<String>();
     	mvc = getMinimumVertexCover(eList, vList);
     	int counter = 0;
     	for (Vertex v : vList) {
     		counter = 0;
+    		//if vertex is part of the vertex cover mark is vertex cover
     		for (String w : mvc) {
     			if (v.name.equals(w)) {
     				counter = 1;
